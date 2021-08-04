@@ -164,11 +164,13 @@ object RunnerCLI : CliktCommand() {
     val compiledProgramDir by option("-cpd", "--compiled-program-dir").file(exists = true, readable = true)
     val programName by argument("program name")
     val programArgs by argument().multiple(required = false)
+    val performanceConfigurationFile by option("-pcf", "--performance-configuration-file").file(exists = true, readable = true)
 
     override fun run() {
         val allProgramFinders = defaultProgramFinders + (programsSearchDirs?.map { DirRpgProgramFinder(File(it)) } ?: emptyList())
         val configuration = Configuration()
         configuration.options?.compiledProgramsDir = compiledProgramDir
+        configuration.options?.performanceConfigurationFile = performanceConfigurationFile
         executePgmWithStringArgs(programName, programArgs, logConfigurationFile, programFinders = allProgramFinders,
         configuration = configuration)
     }

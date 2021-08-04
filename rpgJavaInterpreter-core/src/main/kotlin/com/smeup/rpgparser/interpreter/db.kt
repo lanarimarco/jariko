@@ -98,8 +98,8 @@ data class FileMetadata(
 
 fun FileMetadata.toReloadMetadata(): com.smeup.dbnative.model.FileMetadata {
     val fileMetadata = com.smeup.dbnative.model.FileMetadata(
+        name = this.tableName,
         tableName = this.tableName,
-        recordFormat = this.recordFormat,
         fields = fields.map {
             Field(it.fieldName)
         },

@@ -34,7 +34,7 @@ class DBFileMap {
                 if (formatName != null && !fileDefinition.name.equals(formatName, ignoreCase = true)) {
                     byFormatName[formatName] = dbFile
                 } else {
-                    formatName = dbFile.fileMetadata.recordFormat
+                    formatName = dbFile.fileMetadata.tableName
                     byFormatName[formatName] = dbFile
                 }
             }

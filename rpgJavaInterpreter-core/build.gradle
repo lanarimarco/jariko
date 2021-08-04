@@ -43,7 +43,7 @@ dependencies {
 
     compile 'commons-io:commons-io:2.6'
     compile 'com.github.ajalt:clikt:2.1.0'
-    api 'com.github.smeup:reload:-SNAPSHOT'
+    api 'com.github.smeup:reload:perf-opt-congruent-merged-SNAPSHOT'
 
     compile 'com.github.ziggy42:kolor:0.0.2'
 
@@ -54,6 +54,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
     testCompile 'junit:junit:4.12'
     testCompile 'org.hsqldb:hsqldb:2.5.0'
+    testCompile 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
     testCompile 'io.mockk:mockk:1.9'
 }
 

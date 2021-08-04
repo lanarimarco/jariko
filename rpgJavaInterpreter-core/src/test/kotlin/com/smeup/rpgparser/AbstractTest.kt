@@ -178,10 +178,41 @@ abstract class AbstractTest {
     }
 
     private fun createConnectionConfig(): ConnectionConfig? {
-        val url: String? = System.getenv("JRK_TEST_DB_URL")
-        val user: String? = System.getenv("JRK_TEST_DB_USR")
-        val password: String? = System.getenv("JRK_TEST_DB_PWD")
-        val driver: String? = System.getenv("JRK_TEST_DB_DRIVER")
+        var url: String? = System.getenv("JRK_TEST_DB_URL")
+        var user: String? = System.getenv("JRK_TEST_DB_USR")
+        var password: String? = System.getenv("JRK_TEST_DB_PWD")
+        var driver: String? = System.getenv("JRK_TEST_DB_DRIVER")
+
+        // AS400
+        var db2_400: Boolean = true
+        if (db2_400) {
+            if (url == null) {
+                url = "jdbc:as400://srvlab01.smeup.com/UP_PRR"
+            }
+            if (user == null) {
+                user = "PRVL19"
+            }
+            if (password == null) {
+                password = "pl4we6iu9r"
+            }
+            if (driver == null) {
+                driver = "com.ibm.as400.access.AS400JDBCDriver"
+            }
+        } else {
+            if (url == null) {
+                url = "jdbc:mariadb://172.16.2.117:3306/smeup_123"
+            }
+            if (user == null) {
+                user = "smeup"
+            }
+            if (password == null) {
+                password = "smeup2021"
+            }
+            if (driver == null) {
+                driver = "org.mariadb.jdbc.Driver"
+            }
+        }
+
         return if (url != null && user != null && password != null && driver != null) {
             ConnectionConfig(
                 fileName = "*",

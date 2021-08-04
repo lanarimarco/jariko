@@ -24,7 +24,7 @@ open class MiscDBTest : AbstractTest() {
 
     @Rule
     @JvmField
-    val globalTimeout = Timeout(10, TimeUnit.SECONDS)
+    val globalTimeout = Timeout(10, TimeUnit.MINUTES)
 
     private fun testMute(
         programName: String,
@@ -132,5 +132,15 @@ open class MiscDBTest : AbstractTest() {
     @Test
     fun testMUTE16_09() {
         testMute("db/MUTE16_09")
+    }
+
+    @Test
+    open fun testMUTE19_01() {
+        testMute(programName = "db/MUTE19_01")
+    }
+
+    @Test
+    open fun testMUTE19_02() {
+        testMute(programName = "db/MUTE19_02")
     }
 }
