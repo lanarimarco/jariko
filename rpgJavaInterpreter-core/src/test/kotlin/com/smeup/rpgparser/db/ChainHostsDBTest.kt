@@ -66,6 +66,7 @@ class ChainHostsDBTest : AbstractTest() {
 
     private fun createMetadata() = FileMetadata(
         "QATOCHOST",
+        "QATOCHOST",
         "QHOSTS",
         listOf(
             DbField("INTERNET", StringType(15)),

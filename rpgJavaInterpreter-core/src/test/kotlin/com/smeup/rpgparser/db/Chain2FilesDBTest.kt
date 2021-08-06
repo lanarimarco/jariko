@@ -24,6 +24,7 @@ open class Chain2FilesDBTest : AbstractTest() {
     }
 
     private fun createMetadata(name: String) = FileMetadata(
+        name = name,
         tableName = name,
         recordFormat = "TSTREC",
         fields = listOf(

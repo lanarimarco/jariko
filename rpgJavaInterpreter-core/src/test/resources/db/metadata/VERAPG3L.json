@@ -1,5 +1,6 @@
 {
-    "tableName": "VERAPG3L",
+    "name":"VERAPG3L",
+    "tableName": "VERAPG0F",
     "recordFormat": "VERAPGR",
     "fields": [
         {

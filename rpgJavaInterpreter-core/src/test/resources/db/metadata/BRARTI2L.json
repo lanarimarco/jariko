@@ -1,5 +1,6 @@
 {
-    "tableName": "BRARTI2L",
+    "name": "BRARTI2L",
+    "tableName": "BRARTI0F",
     "recordFormat": "BRARTIR",
     "fields": [
         {

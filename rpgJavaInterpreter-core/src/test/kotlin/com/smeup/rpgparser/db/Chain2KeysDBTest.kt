@@ -45,6 +45,7 @@ open class Chain2KeysDBTest : AbstractTest() {
 
     private fun createMetadata() = FileMetadata(
         "MYFILE2",
+        "MYFILE2",
         "TS2REC",
         listOf(
             DbField("KY1TST", StringType(5)),

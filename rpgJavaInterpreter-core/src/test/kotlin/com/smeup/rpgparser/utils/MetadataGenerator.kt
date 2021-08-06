@@ -11,9 +11,10 @@ import java.io.File
  Utility to create json metadata file
  */
 fun main(args: Array<String>) {
-    val tableName: String = "BRARTI2L"
+    val name = "BRARTI2L"
+    val tableName = "BRARTI0F"
 
-    val jsonMetadataFile: File = File("/home/tron/git-project/jariko/rpgJavaInterpreter-core/src/test/resources/db/metadata/$tableName.json")
+    val jsonMetadataFile = File("/home/tron/git-project/jariko/rpgJavaInterpreter-core/src/test/resources/db/metadata/$tableName.json")
     if (jsonMetadataFile.exists()) {
         println("File $jsonMetadataFile exists!")
         System.exit(1)
@@ -145,7 +146,7 @@ fun main(args: Array<String>) {
     )
 
     val accessField: List<String> = listOf("A§TIAR", "A§ARTI")
-    val fileMetadata: FileMetadata = FileMetadata(tableName, recordFormat, fields, accessField)
+    val fileMetadata: FileMetadata = FileMetadata(name, tableName, recordFormat, fields, accessField)
 
     val jsonContent: String = fileMetadata.toJson()
     jsonMetadataFile.writeText(jsonContent)

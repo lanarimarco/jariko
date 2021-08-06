@@ -20,6 +20,7 @@ fun createEMPLOYEE() =
 fun dropEMPLOYEE() = "DROP TABLE EMPLOYEE"
 
 fun createEmployeeMetadata(): FileMetadata = FileMetadata(
+    name = "EMPLOYEE",
     tableName = "EMPLOYEE",
     recordFormat = "EMPLOYEE",
     fields = listOf(

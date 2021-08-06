@@ -33,6 +33,7 @@ data class DbField(val fieldName: String, val type: Type) {
  * */
 @Serializable
 data class FileMetadata(
+    val name: String,
     val tableName: String,
     val recordFormat: String,
     val fields: List<DbField>,
@@ -71,6 +72,7 @@ data class FileMetadata(
         fun createJsonExample(): String {
             return FileMetadata(
                 "MYTABLE",
+                "MYTABLE",
                 "MYRECORDFORMAT",
                 listOf(
                     DbField(fieldName = "ALPHANUM", StringType(10, true)),
@@ -98,7 +100,7 @@ data class FileMetadata(
 
 fun FileMetadata.toReloadMetadata(): com.smeup.dbnative.model.FileMetadata {
     val fileMetadata = com.smeup.dbnative.model.FileMetadata(
-        name = this.tableName,
+        name = this.name,
         tableName = this.tableName,
         fields = fields.map {
             Field(it.fieldName)
