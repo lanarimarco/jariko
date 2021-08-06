@@ -7,8 +7,8 @@
      V*=====================================================================
      D*  OBIETTIVO
      D*  Programma finalizzato ai test di ottimizzazione di reload:
-     D*  CHAIN su VERAPG0L
-     D*  Programma SPL: 01_CHAIN_5Keys1Time_VERAPG0F
+     D*  CHAIN su VERAPG0L - 5 chain ripetute 10 volte
+     D*  Programma SPL: 03_CHAIN_5Keys10Time_VERAPG0F
      V*=====================================================================
      H/COPY QILEGEN,£INIZH
       * File
@@ -35,6 +35,8 @@
       * Prima CHAIN
      C                   EVAL      V£IDOJ='0001172375'
       *
+     C                   DO        10
+      *
      C     KEY001        CHAIN     VERAPG0L
       *
      C                   IF        %FOUND
@@ -44,10 +46,14 @@
     MU* VAL1($$NOME) VAL2('BAGWIL         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       *  Seconda CHAIN
      C                   EVAL      V£IDOJ='0000993361'
       *
+     C                   DO        10
+      *
      C     KEY001        CHAIN     VERAPG0L
       *
      C                   IF        %FOUND
@@ -57,10 +63,14 @@
     MU* VAL1($$NOME) VAL2('TUBGIU         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Terza CHAIN
      C                   EVAL      V£IDOJ='0001993495'
       *
+     C                   DO        10
+      *
      C     KEY001        CHAIN     VERAPG0L
       *
      C                   IF        %FOUND
@@ -70,10 +80,14 @@
     MU* VAL1($$NOME) VAL2('MATMAN         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Quarta CHAIN
      C                   EVAL      V£IDOJ='0002206817'
       *
+     C                   DO        10
+      *
      C     KEY001        CHAIN     VERAPG0L
       *
      C                   IF        %FOUND
@@ -83,10 +97,14 @@
     MU* VAL1($$NOME) VAL2('MAEOLI         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Quinta CHAIN
      C                   EVAL      V£IDOJ='0002214142'
       *
+     C                   DO        10
+      *
      C     KEY001        CHAIN     VERAPG0L
       *
      C                   IF        %FOUND
@@ -96,6 +114,8 @@
     MU* VAL1($$NOME) VAL2('BANGIA         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * End Time
      C                   TIME                    $TIMEN
       * Elapsed time

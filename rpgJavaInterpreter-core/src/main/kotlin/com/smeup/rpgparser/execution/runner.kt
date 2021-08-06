@@ -6,6 +6,8 @@ import com.github.ajalt.clikt.parameters.arguments.multiple
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.types.file
+import com.smeup.dbnative.ConnectionConfig
+import com.smeup.dbnative.DBNativeAccessConfig
 import com.smeup.rpgparser.interpreter.*
 import com.smeup.rpgparser.jvminterop.JavaSystemInterface
 import com.smeup.rpgparser.logging.defaultLoggingConfiguration
@@ -19,6 +21,8 @@ import com.smeup.rpgparser.parsing.facade.CopyId
 import com.smeup.rpgparser.rpginterop.*
 import org.apache.commons.io.input.BOMInputStream
 import java.io.File
+import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class CommandLineParms internal constructor(
     val parmsList: List<String>,
@@ -164,15 +168,52 @@ object RunnerCLI : CliktCommand() {
     val compiledProgramDir by option("-cpd", "--compiled-program-dir").file(exists = true, readable = true)
     val programName by argument("program name")
     val programArgs by argument().multiple(required = false)
-    val performanceConfigurationFile by option("-pcf", "--performance-configuration-file").file(exists = true, readable = true)
+    val databasesConfigurationFile by argument("database configuration file")
 
     override fun run() {
         val allProgramFinders = defaultProgramFinders + (programsSearchDirs?.map { DirRpgProgramFinder(File(it)) } ?: emptyList())
         val configuration = Configuration()
         configuration.options?.compiledProgramsDir = compiledProgramDir
-        configuration.options?.performanceConfigurationFile = performanceConfigurationFile
+
+        // 'Reload' database configurations from properties file passed as cli argument
+        loadReloadConfig(databasesConfigurationFile = databasesConfigurationFile, configuration = configuration)
+
         executePgmWithStringArgs(programName, programArgs, logConfigurationFile, programFinders = allProgramFinders,
         configuration = configuration)
+    }
+}
+
+private fun loadReloadConfig(databasesConfigurationFile: String, configuration: Configuration) {
+    if (null != RunnerCLI.databasesConfigurationFile && RunnerCLI.databasesConfigurationFile.isNotEmpty()) {
+        val propertyFile = File(RunnerCLI.databasesConfigurationFile)
+        require(propertyFile.exists()) {
+            println("File ${RunnerCLI.databasesConfigurationFile} not exists.")
+        }
+        println("Load database configuration properties from ${RunnerCLI.databasesConfigurationFile}")
+        val mapOfProperties = mutableMapOf<String, String>()
+        val props = Properties()
+        props.load(propertyFile.inputStream())
+        props.forEach { (k, v) -> mapOfProperties.put(k.toString(), v.toString()) }
+
+        val connectionsConfig = mutableListOf<ConnectionConfig>()
+        val metadataPath = mapOfProperties["metadataPath"].toString()
+        val url = mapOfProperties["url"].toString()
+        val user = mapOfProperties["user"].toString()
+        val password = mapOfProperties["password"].toString()
+        val driver = mapOfProperties["driver"].toString()
+        val connectionConfig = ConnectionConfig(fileName = "*", url, user, password, driver)
+        connectionsConfig.add(connectionConfig)
+        val dbNativeAccessConfig = DBNativeAccessConfig(connectionsConfig)
+        val metadataProducer = { dbFile: String ->
+            val metadataFile = File("$metadataPath$dbFile.json")
+            require(metadataFile != null) {
+                "Cannot find $metadataPath$dbFile.json"
+            }
+            FileMetadata.createInstance(metadataFile.toURI().toURL().openStream())
+        }
+
+        val reloadConfig = ReloadConfig(dbNativeAccessConfig, metadataProducer)
+        configuration.reloadConfig = reloadConfig
     }
 }
 

@@ -74,8 +74,7 @@ data class Options(
     var muteVerbose: Boolean = false,
     var toAstConfiguration: ToAstConfiguration = ToAstConfiguration(),
     var callProgramHandler: CallProgramHandler? = null,
-    var dumpSourceOnExecutionError: Boolean? = false,
-    var performanceConfigurationFile: File? = null
+    var dumpSourceOnExecutionError: Boolean? = false
 )
 
 /**

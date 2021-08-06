@@ -143,4 +143,84 @@ open class MiscDBTest : AbstractTest() {
     open fun testMUTE19_02() {
         testMute(programName = "db/MUTE19_02")
     }
+
+    @Test
+    open fun testMUTE19_03() {
+        testMute(programName = "db/MUTE19_03")
+    }
+
+    @Test
+    open fun testMUTE19_04() {
+        testMute(programName = "db/MUTE19_04")
+    }
+
+    @Test
+    open fun testMUTE19_05() {
+        testMute(programName = "db/MUTE19_05")
+    }
+
+    @Test
+    open fun testMUTE19_06() {
+        testMute(programName = "db/MUTE19_06")
+    }
+
+    @Test
+    open fun testMUTE19_23() {
+        testMute(programName = "db/MUTE19_23")
+    }
+
+    @Test
+    open fun testMUTE19_24() {
+        testMute(programName = "db/MUTE19_24")
+    }
+
+    @Test
+    open fun testMUTE19_25() {
+        testMute(programName = "db/MUTE19_25")
+    }
+
+    @Test
+    open fun testMUTE19_26() {
+        testMute(programName = "db/MUTE19_26")
+    }
+
+    @Test
+    open fun testMUTE19_27() {
+        testMute(programName = "db/MUTE19_27")
+    }
+
+    @Test
+    open fun testMUTE19_30() {
+        testMute(programName = "db/MUTE19_30")
+    }
+
+    @Test
+    open fun testMUTE19_31() {
+        testMute(programName = "db/MUTE19_31")
+    }
+
+    @Test
+    open fun testMUTE19_32() {
+        testMute(programName = "db/MUTE19_32")
+    }
+
+    @Test
+    open fun testMUTE19_33() {
+        testMute(programName = "db/MUTE19_33")
+    }
+
+    @Test
+    open fun testMUTE19_34() {
+        testMute(programName = "db/MUTE19_34")
+    }
+
+    @Test
+    open fun testMUTE19_35() {
+        testMute(programName = "db/MUTE19_35")
+    }
+
+    @Test
+    open fun testMUTE19_36() {
+        testMute(programName = "db/MUTE19_36")
+    }
 }

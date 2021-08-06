@@ -7,14 +7,14 @@
      V*=====================================================================
      D*  OBIETTIVO
      D*  Programma finalizzato ai test di ottimizzazione di reload:
-     D*  CHAIN su VERAPG0L
-     D*  Programma SPL: 01_CHAIN_5Keys1Time_VERAPG0F
+     D*  CHAIN su BRARTI0L - 5 chain ripetute 10 volte
+     D*  Programma SPL: 04_CHAIN_5Keys10Time_BRARTI0F
      V*=====================================================================
      H/COPY QILEGEN,£INIZH
       * File
-     FVERAPG0L  IF   E           K DISK
+     FBRARTI0L  IF   E           K DISK
       *---------------------------------------------------------------
-     D $$NOME          S             15
+     D $DESC           S             35
       *
      D $TIMST          S               Z   INZ                                   Tempo iniziale
      D $TIMEN          S               Z   INZ                                   Tempo finale
@@ -31,71 +31,91 @@
      C                   TIME                    $TIMST
       *
      C     KEY001        KLIST
-     C                   KFLD                    V£IDOJ
+     C                   KFLD                    A§ARTI
       * Prima CHAIN
-     C                   EVAL      V£IDOJ='0001172375'
+     C                   EVAL      A§ARTI='ASACC0001'
       *
-     C     KEY001        CHAIN     VERAPG0L
+     C                   DO        10
+      *
+     C     KEY001        CHAIN     BRARTI0L
       *
      C                   IF        %FOUND
-    MU* VAL1($$NOME) VAL2('BAGWIL         ') COMP(EQ)
-     C                   EVAL      $$NOME=V£NOME
+    MU* VAL1($DESC) VAL2('CAVO EIA') COMP(CN)
+     C                   EVAL      $DESC=A§DEAR
      C                   ELSE
-    MU* VAL1($$NOME) VAL2('BAGWIL         ') COMP(EQ)
-     C                   EVAL      $$NOME='NOT FOUND'
+    MU* VAL1($DESC) VAL2('CAVO EIA') COMP(CN)
+     C                   EVAL      $DESC='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       *  Seconda CHAIN
-     C                   EVAL      V£IDOJ='0000993361'
+     C                   EVAL      A§ARTI='ASACC0002'
       *
-     C     KEY001        CHAIN     VERAPG0L
+     C                   DO        10
+      *
+     C     KEY001        CHAIN     BRARTI0L
       *
      C                   IF        %FOUND
-    MU* VAL1($$NOME) VAL2('TUBGIU         ') COMP(EQ)
-     C                   EVAL      $$NOME=V£NOME
+    MU* VAL1($DESC) VAL2('CAVO V.35') COMP(CN)
+     C                   EVAL      $DESC=A§DEAR
      C                   ELSE
-    MU* VAL1($$NOME) VAL2('TUBGIU         ') COMP(EQ)
-     C                   EVAL      $$NOME='NOT FOUND'
+    MU* VAL1($DESC) VAL2('CAVO V.35') COMP(CN)
+     C                   EVAL      $DESC='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Terza CHAIN
-     C                   EVAL      V£IDOJ='0001993495'
+     C                   EVAL      A§ARTI='ASACC0003'
       *
-     C     KEY001        CHAIN     VERAPG0L
+     C                   DO        10
+      *
+     C     KEY001        CHAIN     BRARTI0L
       *
      C                   IF        %FOUND
-    MU* VAL1($$NOME) VAL2('MATMAN         ') COMP(EQ)
-     C                   EVAL      $$NOME=V£NOME
+    MU* VAL1($DESC) VAL2('ADATTATORE TWINAX') COMP(CN)
+     C                   EVAL      $DESC=A§DEAR
      C                   ELSE
-    MU* VAL1($$NOME) VAL2('MATMAN         ') COMP(EQ)
-     C                   EVAL      $$NOME='NOT FOUND'
+    MU* VAL1($DESC) VAL2('ADATTATORE TWINAX') COMP(CN)
+     C                   EVAL      $DESC='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Quarta CHAIN
-     C                   EVAL      V£IDOJ='0002206817'
+     C                   EVAL      A§ARTI='ASACC0004'
       *
-     C     KEY001        CHAIN     VERAPG0L
+     C                   DO        10
+      *
+     C     KEY001        CHAIN     BRARTI0L
       *
      C                   IF        %FOUND
-    MU* VAL1($$NOME) VAL2('MAEOLI         ') COMP(EQ)
-     C                   EVAL      $$NOME=V£NOME
+    MU* VAL1($DESC) VAL2('ESPANSIONE 40 TERMINALI') COMP(CN)
+     C                   EVAL      $DESC=A§DEAR
      C                   ELSE
-    MU* VAL1($$NOME) VAL2('MAEOLI         ') COMP(EQ)
-     C                   EVAL      $$NOME='NOT FOUND'
+    MU* VAL1($DESC) VAL2('ESPANSIONE 40 TERMINALI') COMP(CN)
+     C                   EVAL      $DESC='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * ---------------------
       * Quinta CHAIN
-     C                   EVAL      V£IDOJ='0002214142'
+     C                   EVAL      A§ARTI='ASACC0005'
       *
-     C     KEY001        CHAIN     VERAPG0L
+     C                   DO        10
+      *
+     C     KEY001        CHAIN     BRARTI0L
       *
      C                   IF        %FOUND
-    MU* VAL1($$NOME) VAL2('BANGIA         ') COMP(EQ)
-     C                   EVAL      $$NOME=V£NOME
+    MU* VAL1($DESC) VAL2('PCI RAID DISK') COMP(CN)
+     C                   EVAL      $DESC=A§DEAR
      C                   ELSE
-    MU* VAL1($$NOME) VAL2('BANGIA         ') COMP(EQ)
-     C                   EVAL      $$NOME='NOT FOUND'
+    MU* VAL1($DESC) VAL2('PCI RAID DISK') COMP(CN)
+     C                   EVAL      $DESC='NOT FOUND'
      C                   ENDIF
+      *
+     C                   ENDDO
       * End Time
      C                   TIME                    $TIMEN
       * Elapsed time
