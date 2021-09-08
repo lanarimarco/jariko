@@ -1,10 +1,29 @@
+/*
+ * Copyright 2019 Sme.UP S.p.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.smeup.rpgparser.db
 
 import com.smeup.rpgparser.AbstractTest
 import com.smeup.rpgparser.execution.CommandLineParms
 import com.smeup.rpgparser.execution.Configuration
 import com.smeup.rpgparser.execution.Options
-import com.smeup.rpgparser.interpreter.*
+import com.smeup.rpgparser.interpreter.DataDefinition
+import com.smeup.rpgparser.interpreter.DataStructValue
+import com.smeup.rpgparser.interpreter.IntValue
+import com.smeup.rpgparser.interpreter.StringValue
 import com.smeup.rpgparser.jvminterop.JavaSystemInterface
 import com.smeup.rpgparser.logging.STATEMENT_LOGGER
 import com.smeup.rpgparser.logging.consoleLoggingConfiguration
@@ -371,7 +390,7 @@ open class MiscDBTest : AbstractTest() {
         testMute(programName = "db/MUTE19_36", params = params)
     }
 
-    @Test(timeout=1800000)
+    @Test(timeout = 1800000)
     open fun testEXEC_MUTE() {
 
         // Set if you want print output csv
@@ -379,7 +398,7 @@ open class MiscDBTest : AbstractTest() {
 
         testIfReloadConfig { reloadConfig ->
             val si = JavaSystemInterface().apply {
-                //loggingConfiguration = consoleLoggingConfiguration(*consoleLoggers)
+                // loggingConfiguration = consoleLoggingConfiguration(*consoleLoggers)
                 loggingConfiguration = consoleLoggingConfiguration()
             }
 
@@ -403,7 +422,7 @@ open class MiscDBTest : AbstractTest() {
                 val current = LocalDateTime.now()
                 val dateString = current.toString().replace(":", ".")
 
-                var fileName = "${System.getProperty("user.home")}/Desktop/Smeup/Test-Performance_${dateString}.csv"
+                var fileName = "${System.getProperty("user.home")}/Desktop/Smeup/Test-Performance_$dateString.csv"
 
                 // write file csv
                 File(fileName).printWriter().use { out ->
@@ -415,7 +434,7 @@ open class MiscDBTest : AbstractTest() {
                     }
                 }
 
-                 fileName = "${System.getProperty("user.home")}/Desktop/Smeup/D5/I40D5_$dateString.csv"
+                fileName = "${System.getProperty("user.home")}/Desktop/Smeup/D5/I40D5_$dateString.csv"
 
                 // write file csv
                 File(fileName).printWriter().use { out ->
