@@ -5,6 +5,7 @@
      V* 03/08/21  003102  BUSFIO Creazione
      V* 04/08/21  003102  BUSFIO Aggiunto calcolo tempo impiegato
      V* 05/08/21  003102  BUSFIO Aggiunta entry
+     V* 02/09/21  003102  BUSFIO Modificato controllo risultato
      V*=====================================================================
      D*  OBIETTIVO
      D*  Programma finalizzato ai test di ottimizzazione di reload:
@@ -15,9 +16,8 @@
       * File
      FBRARTI2L  IF   E           K DISK
       *---------------------------------------------------------------
-     D $$TIAR          S              5
-     D $$DEAR          S             35
-     D $$ARTI          S             15
+     D $N              S              3  0
+     D RESULT          S              3  0
       *
      D $TIMST          S               Z   INZ                                   Tempo iniziale
      D $TIMEN          S               Z   INZ                                   Tempo finale
@@ -43,6 +43,8 @@
       * Begin time
      C                   TIME                    $TIMST
       *
+     C                   EVAL      $N = 0
+      *
      C     KEY001        KLIST
      C                   KFLD                    A§TIAR
       *
@@ -59,23 +61,12 @@
       *
      C     KEY001        READPE    BRARTI2L
       *
+     C                   EVAL      $N = $N + 1
+      *
      C                   ENDDO
       *
-     C                   IF        A§ARTI <> ''
-    MU* VAL1($$TIAR) VAL2('ART  ') COMP(EQ)
-     C                   EVAL      $$TIAR=A§TIAR
-    MU* VAL1($$ARTI) VAL2('TWXIB0002      ') COMP(EQ)
-     C                   EVAL      $$ARTI=A§ARTI
-    MU* VAL1($$DEAR) VAL2('ATTACCO TWINAX SCS INFO PRINT      ') COMP(EQ)
-     C                   EVAL      $$DEAR=A§DEAR
-     C                   ELSE
-    MU* VAL1($$TIAR) VAL2('ART  ') COMP(EQ)
-     C                   EVAL      $$TIAR='NOT FOUND'
-    MU* VAL1($$ARTI) VAL2('TWXIB0002      ') COMP(EQ)
-     C                   EVAL      $$ARTI='NOT FOUND'
-    MU* VAL1($$DEAR) VAL2('ATTACCO TWINAX SCS INFO PRINT      ') COMP(EQ)
-     C                   EVAL      $$DEAR='NOT FOUND'
-     C                   ENDIF
+    MU* VAL1(RESULT) VAL2(100) COMP(EQ)
+     C                   EVAL      RESULT = $N
       * End Time
      C                   TIME                    $TIMEN
       * Elapsed time
