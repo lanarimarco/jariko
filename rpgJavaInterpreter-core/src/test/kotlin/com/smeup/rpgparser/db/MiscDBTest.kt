@@ -17,9 +17,8 @@
 package com.smeup.rpgparser.db
 
 import com.smeup.rpgparser.AbstractTest
-import com.smeup.rpgparser.execution.CommandLineParms
-import com.smeup.rpgparser.execution.Configuration
-import com.smeup.rpgparser.execution.Options
+import com.smeup.rpgparser.evaluation.DBPerformanceTest
+import com.smeup.rpgparser.execution.*
 import com.smeup.rpgparser.interpreter.DataDefinition
 import com.smeup.rpgparser.interpreter.DataStructValue
 import com.smeup.rpgparser.interpreter.IntValue
@@ -27,8 +26,10 @@ import com.smeup.rpgparser.interpreter.StringValue
 import com.smeup.rpgparser.jvminterop.JavaSystemInterface
 import com.smeup.rpgparser.logging.STATEMENT_LOGGER
 import com.smeup.rpgparser.logging.consoleLoggingConfiguration
+import com.smeup.rpgparser.parsing.parsetreetoast.isInt
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.Timeout
 import java.io.File
 import java.time.LocalDateTime
@@ -44,7 +45,7 @@ open class MiscDBTest : AbstractTest() {
 
     @Rule
     @JvmField
-    val globalTimeout = Timeout(10, TimeUnit.MINUTES)
+    val globalTimeout = Timeout(90, TimeUnit.MINUTES)
 
     // programName, params, consoleLoggers
     private fun testMute(
@@ -390,7 +391,7 @@ open class MiscDBTest : AbstractTest() {
         testMute(programName = "db/MUTE19_36", params = params)
     }
 
-    @Test(timeout = 1800000)
+    @Test(timeout = 1800000) @Category(DBPerformanceTest::class)
     open fun testEXEC_MUTE() {
 
         // Set if you want print output csv
@@ -402,10 +403,13 @@ open class MiscDBTest : AbstractTest() {
                 loggingConfiguration = consoleLoggingConfiguration()
             }
 
+            var jrkEXEC_MUTErepeat: String = System.getProperty("jrkEXEC_MUTErepeat")
+            if (null == jrkEXEC_MUTErepeat || jrkEXEC_MUTErepeat.isEmpty() ||
+                !jrkEXEC_MUTErepeat.isInt()) jrkEXEC_MUTErepeat = "1"
             val params: CommandLineParms = CommandLineParms(
                 mapOf(
                     "EXEC_DB" to StringValue(reloadConfig.nativeAccessConfig.connectionsConfig.get(0).driver.toString()),
-                    "EXEC_NM" to IntValue(100)
+                    "EXEC_NM" to IntValue(jrkEXEC_MUTErepeat.toLong())
                 ))
 
             executePgm(
@@ -422,7 +426,17 @@ open class MiscDBTest : AbstractTest() {
                 val current = LocalDateTime.now()
                 val dateString = current.toString().replace(":", ".")
 
-                var fileName = "${System.getProperty("user.home")}/Desktop/Smeup/Test-Performance_$dateString.csv"
+                var jrkCsvOutputDir = System.getProperty("jrkCsvOutputDir")
+                if (null != jrkCsvOutputDir && jrkCsvOutputDir.isNotEmpty()) {
+                    val outputDir = File(jrkCsvOutputDir)
+                    if (!outputDir.exists()) {
+                        jrkCsvOutputDir = System.getProperty("java.io.tmpdir")
+                        println("Output csv directory $jrkCsvOutputDir not exists, use $jrkCsvOutputDir")
+                    }
+                } else {
+                    jrkCsvOutputDir = System.getProperty("java.io.tmpdir")
+                }
+                var fileName = "$jrkCsvOutputDir/Test-Performance_$dateString.csv"
 
                 // write file csv
                 File(fileName).printWriter().use { out ->
@@ -434,7 +448,7 @@ open class MiscDBTest : AbstractTest() {
                     }
                 }
 
-                fileName = "${System.getProperty("user.home")}/Desktop/Smeup/D5/I40D5_$dateString.csv"
+                fileName = "$jrkCsvOutputDir/I40D5_$dateString.csv"
 
                 // write file csv
                 File(fileName).printWriter().use { out ->

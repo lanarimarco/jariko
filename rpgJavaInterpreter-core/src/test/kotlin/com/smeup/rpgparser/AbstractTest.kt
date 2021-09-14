@@ -26,6 +26,7 @@ import com.smeup.rpgparser.parsing.ast.CompilationUnit
 import com.smeup.rpgparser.rpginterop.DirRpgProgramFinder
 import com.smeup.rpgparser.rpginterop.RpgProgramFinder
 import java.io.File
+import java.util.*
 import kotlin.test.BeforeTest
 
 /**
@@ -178,39 +179,31 @@ abstract class AbstractTest {
     }
 
     private fun createConnectionConfig(): ConnectionConfig? {
-        var url: String? = System.getenv("JRK_TEST_DB_URL")
-        var user: String? = System.getenv("JRK_TEST_DB_USR")
-        var password: String? = System.getenv("JRK_TEST_DB_PWD")
-        var driver: String? = System.getenv("JRK_TEST_DB_DRIVER")
 
-        // AS400
-        var db2_400: Boolean = true
-        if (db2_400) {
-            if (url == null) {
-                url = "jdbc:as400://srvlab01.smeup.com/UP_PRR"
+        val jrkConfigurationFile = System.getProperty("jrkConfigurationFile")
+
+        var url: String = ""
+        var user: String = ""
+        var password: String = ""
+        var driver: String = ""
+
+        if (null != jrkConfigurationFile && jrkConfigurationFile.isNotEmpty()) {
+            val propertyFile = File(jrkConfigurationFile)
+            require(propertyFile.exists()) {
+                println("File $jrkConfigurationFile not exists.")
             }
-            if (user == null) {
-                user = "PRVL19"
-            }
-            if (password == null) {
-                password = "pl4we6iu9r"
-            }
-            if (driver == null) {
-                driver = "com.ibm.as400.access.AS400JDBCDriver"
-            }
+            println("Load database configuration properties from $jrkConfigurationFile")
+            val props = Properties()
+            props.load(propertyFile.inputStream())
+            url = props["url"].toString()
+            user = props["user"].toString()
+            password = props["password"].toString()
+            driver = props["driver"].toString()
         } else {
-            if (url == null) {
-                url = "jdbc:mariadb://172.16.2.117:3306/smeup_123"
-            }
-            if (user == null) {
-                user = "smeup"
-            }
-            if (password == null) {
-                password = "smeup2021"
-            }
-            if (driver == null) {
-                driver = "org.mariadb.jdbc.Driver"
-            }
+            url = System.getenv("JRK_TEST_DB_URL")
+            user = System.getenv("JRK_TEST_DB_USR")
+            password = System.getenv("JRK_TEST_DB_PWD")
+            driver = System.getenv("JRK_TEST_DB_DRIVER")
         }
 
         return if (url != null && user != null && password != null && driver != null) {

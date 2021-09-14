@@ -158,6 +158,21 @@ task testPerformance(type: Test) {
     }
 }
 
+//gradlew testDBPerformance -DjrkCsvOutputDir="/home/.../myCsvResults" -DjrkConfigurationFile="/home/.../jrkDBConfigurations/as400-db-configurations.properties"
+task testDBPerformance(type: Test) {
+    systemProperty 'jrkCsvOutputDir', System.getProperty('jrkCsvOutputDir')
+    systemProperty 'jrkConfigurationFile', System.getProperty('jrkConfigurationFile')
+    systemProperty 'jrkEXEC_MUTErepeat', System.getProperty('jrkEXEC_MUTErepeat')
+    systemProperty 'featuresFactory', System.getProperty('featuresFactory', 'default')
+    maxHeapSize = "2048m"
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    useJUnit {
+        includeCategories 'com.smeup.rpgparser.evaluation.DBPerformanceTest'
+    }
+}
+
 task testAll(type: Test) {
     systemProperty 'featuresFactory', System.getProperty('featuresFactory', 'default')
     testLogging {
