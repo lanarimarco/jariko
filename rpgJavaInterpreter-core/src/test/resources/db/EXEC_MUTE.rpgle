@@ -8,6 +8,7 @@
      V* 09/08/21  003102  BUSFIO Terminata creazione CSV per D5COSO
      V* 12/08/21  003102  BUSFIO Modificato per aggirare errori in jariko
      V* 09/08/21  003102  BUSFIO Pulizia codice
+     V* 16/09/21  003102  BUSFIO Aggiunta nuova variabile per la Entry
      V* ==============================================================
      H/COPY QILEGEN,£INIZH
       *--------------------------------------------------------------------------------------------*
@@ -26,6 +27,7 @@
      D MU_TSNAME       S             45                                          Test name
      D MU_FLNAME       S             10                                          File name
      D MU_TPOPER       S             15                                          Type oper
+     D MU_FAIL         S              3                                          Test Fail
       *--------------------------------------------------------------------------------------------*
      D $TIMST          S               Z   INZ
      D §ST             S            500
@@ -45,7 +47,7 @@
       *--------------------------------------------------------------------------------------------*
       * Struttura DS - Lettura da CSV
      D                 DS
-     D §TAB                         160    DIM(4000) INZ
+     D §TAB                         163    DIM(4000) INZ
      D  §TIME                        23    OVERLAY(§TAB:1)                      Time
      D  §MUNAM                        9    OVERLAY(§TAB:*NEXT)                  Mute name
      D  §TSNAM                       42    OVERLAY(§TAB:*NEXT)                  Test name
@@ -56,6 +58,7 @@
      D  §DRIVE                       36    OVERLAY(§TAB:*NEXT)                  Driver
      D  §VERSI                        1    OVERLAY(§TAB:*NEXT)                  Version
      D  §ENVIR                        6    OVERLAY(§TAB:*NEXT)                  Environment
+     D  §FAIL                         3    OVERLAY(§TAB:*NEXT)                  Fail
       * Struttura DS - Analisi Test name
      D                 DS
      D §DATA                         50    DIM(4000)  INZ
@@ -98,6 +101,7 @@
      C                   PARM                    MU_TSNAME
      C                   PARM                    MU_FLNAME
      C                   PARM                    MU_TPOPER
+     C                   PARM                    MU_FAIL
       * Incremento indice DS
      C                   EVAL      $INDS=$INDS+1
       * valorizzo DS
@@ -111,13 +115,15 @@
      C                   EVAL      §DRIVE($INDS)= %TRIM(EXEC_DB)
      C                   EVAL      §VERSI($INDS)= ' '
      C                   EVAL      §ENVIR($INDS)= 'Jariko'
+     C                   EVAL      §FAIL($INDS)= %TRIM(MU_FAIL)
       *
       * Scrivo riga csv 
      C                   EVAL      $MSGOUT= §TIME($INDS) + ','+§MUNAM($INDS)+','
      C                                    +§TSNAM($INDS) + ','+§DBNAM($INDS)+','
      C                                    +§FLNAM($INDS) + ','+§TYOPE($INDS)+','
      C                                    +§TIMEE($INDS) + ','+§DRIVE($INDS)+','
-     C                                    +§VERSI($INDS) + ','+§ENVIR($INDS)
+     C                                    +§VERSI($INDS) + ','+§ENVIR($INDS)+','
+     C                                    +§FAIL($INDS)
      C     $MSGOUT       DSPLY     £PDSNU      
      C                   ENDDO
       *
@@ -266,7 +272,7 @@ UPDATE_1Record_
 DELETE_1Record_
 **CTDATA CSV_INT
 Time,Mute name,Test name,Db name,File name,Type operation,Time elapsed (ms),Driver,
-Version,Environment
+Version,Environment,Fail
 I_D$TIPA;I_D$CODI;I_D$TROT;I_D$COD1;I_D$COD2;I_D$COD3;I_D$DTVA;I_D$SSIN;I_D$C001;I_D$C002;I_D$C003;
 I_D$C004;I_D$C005;I_D$C006;I_D$C007;I_D$C008;I_D$C009;I_D$C010;I_D$C011;I_D$C012;I_D$C013;I_D$C014;
 I_D$C015;I_D$C016;I_D$C017;

@@ -4,6 +4,7 @@
      V*=====================================================================
      V* 03/08/21  003102  BUSFIO Creazione
      V* 04/08/21  003102  BUSFIO Calcolo tempo impiegato e aggiunta Entry
+     V* 16/09/21  003102  BUSFIO Aggiunta nuova variabile per la Entry
      V*=====================================================================
      D*  OBIETTIVO
      D*  Programma finalizzato ai test di ottimizzazione di reload:
@@ -21,12 +22,13 @@
      D $TIMMS          S             10I 0                                       Tempo millisecondi
       *
      D $MSG            S             52                                          Output
+     D $FAIL           S              3    INZ('NO')                             Indicatore di Fail
       *
      D MU_TIME         S             10                                          Entry - Tempo
      D MU_TSNAME       S             45                                          Entry - Test name
      D MU_FLNAME       S             10                                          Entry - File name
      D MU_TPOPER       S             15                                          Entry - Type oper
-     D VALPAR          S              5  0
+     D MU_FAIL         S              3                                          Entry - Test Fail
       *---------------------------------------------------------------
      I/COPY QILEGEN,£TABB£1DS
      I/COPY QILEGEN,£PDS
@@ -38,6 +40,7 @@
      C                   PARM                    MU_TSNAME
      C                   PARM                    MU_FLNAME
      C                   PARM                    MU_TPOPER
+     C                   PARM                    MU_FAIL
       * Begin time
      C                   TIME                    $TIMST
       *
@@ -54,6 +57,7 @@
      C                   ELSE
     MU* VAL1($$NOME) VAL2('BAGWIL         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
+     C                   EVAL      $FAIL='YES'
      C                   ENDIF
       * ---------------------
       *  Seconda CHAIN
@@ -67,6 +71,7 @@
      C                   ELSE
     MU* VAL1($$NOME) VAL2('TUBGIU         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
+     C                   EVAL      $FAIL='YES'
      C                   ENDIF
       * ---------------------
       * Terza CHAIN
@@ -80,6 +85,7 @@
      C                   ELSE
     MU* VAL1($$NOME) VAL2('MATMAN         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
+     C                   EVAL      $FAIL='YES'
      C                   ENDIF
       * ---------------------
       * Quarta CHAIN
@@ -93,6 +99,7 @@
      C                   ELSE
     MU* VAL1($$NOME) VAL2('MAEOLI         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
+     C                   EVAL      $FAIL='YES'
      C                   ENDIF
       * ---------------------
       * Quinta CHAIN
@@ -106,6 +113,7 @@
      C                   ELSE
     MU* VAL1($$NOME) VAL2('BANGIA         ') COMP(EQ)
      C                   EVAL      $$NOME='NOT FOUND'
+     C                   EVAL      $FAIL='YES'
      C                   ENDIF
       * End Time
      C                   TIME                    $TIMEN
@@ -116,14 +124,12 @@
      C*                   EVAL      $MSG = %CHAR($TIMMS)
      C*     $MSG          DSPLY     £PDSNU
       *
-     C*                   EVAL      VALPAR = %PARMS
-     C*                   IF        %PARMS>0
-     C*                   IF        MU_TIME<>''
+     C*                   IF        £PDSPR>0
      C                   EVAL      MU_TIME = %CHAR($TIMMS)
      C                   EVAL      MU_TSNAME = '01_CHAIN_5Keys1Time_VERAPG0F'   COSTANTE
      C                   EVAL      MU_FLNAME = 'VERAPG0F'                       COSTANTE
      C                   EVAL      MU_TPOPER = 'CHAIN'                          COSTANTE
+     C                   EVAL      MU_FAIL = $FAIL
      C*                   ENDIF
-     C*                   CLOSE     VERAPG0L
       *
      C                   SETON                                        LR

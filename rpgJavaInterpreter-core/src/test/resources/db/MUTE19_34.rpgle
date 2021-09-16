@@ -5,6 +5,7 @@
      V* 04/08/21  003102  BUSFIO Creazione
      V* 05/08/21  003102  BUSFIO Aggiunta entry
      V* 02/09/21  003102  BUSFIO Modificato controllo risultato
+     V* 16/09/21  003102  BUSFIO Aggiunta nuova variabile per la Entry
      V*=====================================================================
      D*  OBIETTIVO
      D*  Programma finalizzato ai test di ottimizzazione di reload:
@@ -17,6 +18,7 @@
       *---------------------------------------------------------------
      D RESULT          S              3  0
      D $N              S              3  0
+     D $FAIL           S              3    INZ('NO')                             Indicatore di Fail
       *
      D $TIMST          S               Z   INZ                                   Tempo iniziale
      D $TIMEN          S               Z   INZ                                   Tempo finale
@@ -28,6 +30,7 @@
      D MU_TSNAME       S             45                                          Entry - Test name
      D MU_FLNAME       S             10                                          Entry - File name
      D MU_TPOPER       S             15                                          Entry - Type oper
+     D MU_FAIL         S              3                                          Entry - Test Fail
       *---------------------------------------------------------------
      I/COPY QILEGEN,£TABB£1DS
      I/COPY QILEGEN,£PDS
@@ -39,6 +42,7 @@
      C                   PARM                    MU_TSNAME
      C                   PARM                    MU_FLNAME
      C                   PARM                    MU_TPOPER
+     C                   PARM                    MU_FAIL
       * Begin time
      C                   TIME                    $TIMST
       *
@@ -66,6 +70,10 @@
       *
     MU* VAL1(RESULT) VAL2(100) COMP(EQ)
      C                   EVAL      RESULT= $N
+      *
+     C                   IF        RESULT <> 100
+     C                   EVAL      $FAIL='YES'
+     C                   ENDIF
       * End Time
      C                   TIME                    $TIMEN
       * Elapsed time
@@ -81,6 +89,7 @@
      C                                        +'_100_BRARTI0F'                  COSTANTE
      C                   EVAL      MU_FLNAME = 'BRARTI0F'                       COSTANTE
      C                   EVAL      MU_TPOPER = 'SETLL READE'                    COSTANTE
+     C                   EVAL      MU_FAIL = $FAIL
      C*                   ENDIF
       *
      C                   SETON                                        LR
