@@ -31,6 +31,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.rules.Timeout
+import org.junit.runners.model.TestTimedOutException
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -391,7 +392,8 @@ open class MiscDBTest : AbstractTest() {
         testMute(programName = "db/MUTE19_36", params = params)
     }
 
-    @Test(timeout = 1800000) @Category(DBPerformanceTest::class)
+    // Before run this test, increase the variable globalTimeout with a value equal or more of timeout
+    @Test(timeout = 42000000) @Category(DBPerformanceTest::class)
     open fun testEXEC_MUTE() {
 
         // Set if you want print output csv
@@ -412,51 +414,55 @@ open class MiscDBTest : AbstractTest() {
                     "EXEC_NM" to IntValue(jrkEXEC_MUTErepeat.toLong())
                 ))
 
-            executePgm(
-                programName = "db/EXEC_MUTE",
-                params = params,
-                configuration = Configuration(reloadConfig = reloadConfig, options = Options(muteSupport = true)),
-                systemInterface = si
-            )
+            try {
+                executePgm(
+                    programName = "db/EXEC_MUTE",
+                    params = params,
+                    configuration = Configuration(reloadConfig = reloadConfig, options = Options(muteSupport = true)),
+                    systemInterface = si
+                )
+            } catch (e: TestTimedOutException) {
+                e.printStackTrace()
+            } finally {
+                if (print) {
+                    // Important: check if exist path folder
 
-            if (print) {
-                // Important: check if exist path folder
+                    // set current date
+                    val current = LocalDateTime.now()
+                    val dateString = current.toString().replace(":", ".")
 
-                // set current date
-                val current = LocalDateTime.now()
-                val dateString = current.toString().replace(":", ".")
-
-                var jrkCsvOutputDir = System.getProperty("jrkCsvOutputDir")
-                if (null != jrkCsvOutputDir && jrkCsvOutputDir.isNotEmpty()) {
-                    val outputDir = File(jrkCsvOutputDir)
-                    if (!outputDir.exists()) {
+                    var jrkCsvOutputDir = System.getProperty("jrkCsvOutputDir")
+                    if (null != jrkCsvOutputDir && jrkCsvOutputDir.isNotEmpty()) {
+                        val outputDir = File(jrkCsvOutputDir)
+                        if (!outputDir.exists()) {
+                            jrkCsvOutputDir = System.getProperty("java.io.tmpdir")
+                            println("Output csv directory $jrkCsvOutputDir not exists, use $jrkCsvOutputDir")
+                        }
+                    } else {
                         jrkCsvOutputDir = System.getProperty("java.io.tmpdir")
-                        println("Output csv directory $jrkCsvOutputDir not exists, use $jrkCsvOutputDir")
                     }
-                } else {
-                    jrkCsvOutputDir = System.getProperty("java.io.tmpdir")
-                }
-                var fileName = "$jrkCsvOutputDir/Test-Performance_$dateString.csv"
+                    var fileName = "$jrkCsvOutputDir/Test-Performance_$dateString.csv"
 
-                // write file csv
-                File(fileName).printWriter().use { out ->
-                    for (str in si.consoleOutput) {
-                        if (str.contains(";")) {
-                            continue
+                    // write file csv
+                    File(fileName).printWriter().use { out ->
+                        for (str in si.consoleOutput) {
+                            if (str.contains(";")) {
+                                continue
+                            }
+                            out.println(str)
                         }
-                        out.println(str)
                     }
-                }
 
-                fileName = "$jrkCsvOutputDir/I40D5_$dateString.csv"
+                    fileName = "$jrkCsvOutputDir/I40D5_$dateString.csv"
 
-                // write file csv
-                File(fileName).printWriter().use { out ->
-                    for (str in si.consoleOutput) {
-                        if (str.contains(",")) {
-                            continue
+                    // write file csv
+                    File(fileName).printWriter().use { out ->
+                        for (str in si.consoleOutput) {
+                            if (str.contains(",")) {
+                                continue
+                            }
+                            out.println(str.replace('.', ','))
                         }
-                        out.println(str.replace('.', ','))
                     }
                 }
             }

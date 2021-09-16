@@ -28,39 +28,39 @@
      D MU_TPOPER       S             15                                          Type oper
       *--------------------------------------------------------------------------------------------*
      D $TIMST          S               Z   INZ
-     D §ST             S            400
+     D §ST             S            500
      D $X              S              4  0
      D $INDS           S              4  0
      D $$DB            S              2
      D $$DATABASE      S             20  
       *--Routine creazione Csv D5------------------------------------------------------------------*
-     D $AVERAGE        S              6  2                                       Variabile per media
-     D $SUMTIME        S              4  0                                       Variabile per somma
+     D $AVERAGE        S              8  2                                       Variabile per media
+     D $SUMTIME        S              6  0                                       Variabile per somma
      D $NTIME          S              2  0                                       N time trovato dato
      D $F              S              4  0                                       Indice
      D $T              S              4  0                                       Indice
      D $NDATA          S              4  0                                       Numeratore DS DATA
-     D $SPL            S             45                                          Numeratore DS DATA
-     D $MSGOUT         S            300
+     D $SPL            S             60                                          Numeratore DS DATA
+     D $MSGOUT         S            500
       *--------------------------------------------------------------------------------------------*
       * Struttura DS - Lettura da CSV
      D                 DS
-     D §TAB                         157    DIM(4000) INZ
+     D §TAB                         160    DIM(4000) INZ
      D  §TIME                        23    OVERLAY(§TAB:1)                      Time
      D  §MUNAM                        9    OVERLAY(§TAB:*NEXT)                  Mute name
      D  §TSNAM                       42    OVERLAY(§TAB:*NEXT)                  Test name
      D  §DBNAM                       15    OVERLAY(§TAB:*NEXT)                  Db name
      D  §FLNAM                        8    OVERLAY(§TAB:*NEXT)                  File name
      D  §TYOPE                       12    OVERLAY(§TAB:*NEXT)                  Type operation
-     D  §TIMEE                        5    OVERLAY(§TAB:*NEXT)                  Time elapsed
+     D  §TIMEE                        8    OVERLAY(§TAB:*NEXT)                  Time elapsed
      D  §DRIVE                       36    OVERLAY(§TAB:*NEXT)                  Driver
      D  §VERSI                        1    OVERLAY(§TAB:*NEXT)                  Version
      D  §ENVIR                        6    OVERLAY(§TAB:*NEXT)                  Environment
       * Struttura DS - Analisi Test name
      D                 DS
-     D §DATA                         46    DIM(4000)  INZ 
+     D §DATA                         50    DIM(4000)  INZ
      D  §DATA_NM                     42    OVERLAY(§DATA:1)
-     D  §DATA_TM                      4    OVERLAY(§DATA:*NEXT)
+     D  §DATA_TM                      8    OVERLAY(§DATA:*NEXT)
       *--------------------------------------------------------------------------------------------*
       * Impostazioni iniziali
      C                   EXSR      IMP0
