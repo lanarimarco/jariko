@@ -46,7 +46,7 @@ open class MiscDBTest : AbstractTest() {
 
     @Rule
     @JvmField
-    val globalTimeout = Timeout(90, TimeUnit.MINUTES)
+    val globalTimeout = Timeout(700, TimeUnit.MINUTES)
 
     // programName, params, consoleLoggers
     private fun testMute(
