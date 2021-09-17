@@ -182,10 +182,10 @@ abstract class AbstractTest {
 
         val jrkConfigurationFile = System.getProperty("jrkConfigurationFile")
 
-        var url: String = ""
-        var user: String = ""
-        var password: String = ""
-        var driver: String = ""
+        var url: String?
+        var user: String?
+        var password: String?
+        var driver: String?
 
         if (null != jrkConfigurationFile && jrkConfigurationFile.isNotEmpty()) {
             val propertyFile = File(jrkConfigurationFile)
