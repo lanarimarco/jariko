@@ -145,7 +145,7 @@ class RunnerTest : AbstractTest() {
                 if (programName == "TRANSLATE") {
                     listOf(
                         StringValue(
-                            URL("https://run.mocky.io/v3/c4e203a5-9511-49f0-bc00-78dff4c4ebc7").readText(),
+                            "Ciao!",
                             false
                         )
                     )

@@ -183,7 +183,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_01", params = params)
     }
@@ -195,7 +196,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_02", params = params)
     }
@@ -207,7 +209,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_03", params = params)
     }
@@ -219,7 +222,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_04", params = params)
     }
@@ -231,7 +235,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_05", params = params)
     }
@@ -243,7 +248,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_06", params = params)
     }
@@ -255,7 +261,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_23", params = params)
     }
@@ -267,7 +274,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_24", params = params)
     }
@@ -279,7 +287,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_25", params = params)
     }
@@ -291,7 +300,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_26", params = params)
     }
@@ -303,7 +313,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_27", params = params)
     }
@@ -315,7 +326,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_30", params = params)
     }
@@ -327,7 +339,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_31", params = params)
     }
@@ -339,7 +352,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_32", params = params)
     }
@@ -351,7 +365,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_33", params = params)
     }
@@ -363,7 +378,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_34", params = params)
     }
@@ -375,7 +391,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_35", params = params)
     }
@@ -387,7 +404,8 @@ open class MiscDBTest : AbstractTest() {
                 "MU_TIME" to StringValue("SI"),
                 "MU_TSNAME" to StringValue(""),
                 "MU_FLNAME" to StringValue(""),
-                "MU_TPOPER" to StringValue("")
+                "MU_TPOPER" to StringValue(""),
+                "MU_FAIL" to StringValue("")
             ))
         testMute(programName = "db/MUTE19_36", params = params)
     }
@@ -405,7 +423,7 @@ open class MiscDBTest : AbstractTest() {
                 loggingConfiguration = consoleLoggingConfiguration()
             }
 
-            var jrkEXEC_MUTErepeat: String = System.getProperty("jrkEXEC_MUTErepeat")
+            var jrkEXEC_MUTErepeat: String? = System.getProperty("jrkEXEC_MUTErepeat")
             if (null == jrkEXEC_MUTErepeat || jrkEXEC_MUTErepeat.isEmpty() ||
                 !jrkEXEC_MUTErepeat.isInt()) jrkEXEC_MUTErepeat = "1"
             val params: CommandLineParms = CommandLineParms(

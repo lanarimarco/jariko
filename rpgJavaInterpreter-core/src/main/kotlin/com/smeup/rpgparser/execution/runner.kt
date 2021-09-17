@@ -168,7 +168,7 @@ object RunnerCLI : CliktCommand() {
     val compiledProgramDir by option("-cpd", "--compiled-program-dir").file(exists = true, readable = true)
     val programName by argument("program name")
     val programArgs by argument().multiple(required = false)
-    val databasesConfigurationFile by argument("database configuration file")
+    val databasesConfigurationFile by option("-dcf", "--db-configuration-file")
 
     override fun run() {
         val allProgramFinders = defaultProgramFinders + (programsSearchDirs?.map { DirRpgProgramFinder(File(it)) } ?: emptyList())
@@ -176,15 +176,14 @@ object RunnerCLI : CliktCommand() {
         configuration.options?.compiledProgramsDir = compiledProgramDir
 
         // 'Reload' database configurations from properties file passed as cli argument
-        loadReloadConfig(databasesConfigurationFile = databasesConfigurationFile, configuration = configuration)
-
+        databasesConfigurationFile?.let { loadReloadConfig(it, configuration) }
         executePgmWithStringArgs(programName, programArgs, logConfigurationFile, programFinders = allProgramFinders,
         configuration = configuration)
     }
 }
 
 private fun loadReloadConfig(databasesConfigurationFile: String, configuration: Configuration) {
-    if (null != RunnerCLI.databasesConfigurationFile && RunnerCLI.databasesConfigurationFile.isNotEmpty()) {
+    if (null != RunnerCLI.databasesConfigurationFile && RunnerCLI.databasesConfigurationFile!!.isNotEmpty()) {
         val propertyFile = File(RunnerCLI.databasesConfigurationFile)
         require(propertyFile.exists()) {
             println("File ${RunnerCLI.databasesConfigurationFile} not exists.")
