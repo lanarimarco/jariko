@@ -219,7 +219,7 @@ abstract class AbstractTest {
         }
     }
 
-    fun createReloadConfig(): ReloadConfig? {
+    private fun createReloadConfig(): ReloadConfig? {
         return createConnectionConfig()?.let {
             ReloadConfig(
                 nativeAccessConfig = DBNativeAccessConfig(listOf(it)),
