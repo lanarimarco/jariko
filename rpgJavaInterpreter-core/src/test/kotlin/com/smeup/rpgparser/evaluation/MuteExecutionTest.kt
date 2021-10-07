@@ -265,6 +265,26 @@ open class MuteExecutionTest : AbstractTest() {
         assertMuteExecutionSucceded("overlay/MUTE12_09")
     }
 
+    @Test
+    fun executeMUTE12_11() {
+        assertMuteExecutionSucceded("data/ds/MUTE12_11", 12)
+    }
+
+    @Test
+    fun executeMUTE12_12() {
+        assertMuteExecutionSucceded("data/ds/MUTE12_12", 4)
+    }
+
+    @Test
+    fun executeMUTE12_13() {
+        assertMuteExecutionSucceded("data/ds/MUTE12_13", 4)
+    }
+
+    @Test
+    fun executeMUTE12_14() {
+        assertMuteExecutionSucceded("data/ds/MUTE12_14", 4)
+    }
+
     @Test @Ignore
     fun executeMUTE13_26() {
         assertMuteExecutionSucceded("mute/MUTE13_26")
@@ -273,6 +293,16 @@ open class MuteExecutionTest : AbstractTest() {
     @Test
     fun executeMUTE13_27() {
         assertMuteExecutionSucceded("mute/MUTE13_27")
+    }
+
+    @Test
+    fun executeMUTE13_28() {
+        assertMuteExecutionSucceded("mute/MUTE13_28")
+    }
+
+    @Test
+    fun executeMUTE13_30() {
+        assertMuteExecutionSucceded("mute/MUTE13_30")
     }
 
     @Test
