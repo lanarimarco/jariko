@@ -310,8 +310,8 @@ class RpgParserFacade {
         ).let { MainExecutionContext.getConfiguration().jarikoCallback.beforeParsing.invoke(it) }
 
         if (!MainExecutionContext.getParsingProgramStack().empty()) {
-            MainExecutionContext.getParsingProgramStack().peek().copyBlocks = copyBlocks
             MainExecutionContext.getParsingProgramStack().peek().sourceLines = code.split("\\r\\n|\\n".toRegex())
+            MainExecutionContext.getParsingProgramStack().peek().copyBlocks = copyBlocks
         }
         val parser = createParser(BOMInputStream(code.byteInputStream(Charsets.UTF_8)), errors, longLines = true)
         val root: RContext

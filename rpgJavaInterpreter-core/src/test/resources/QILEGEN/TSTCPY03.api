@@ -1,0 +1,6 @@
+     V* ==============================================================
+     D* Copy that include a not found copy
+     V* ==============================================================
+  T > /COPY XXX,YYY
+     C                   EVAL      MSGCPY='I am copy with .api extension'
+     C     MSGCPY        DSPLY

@@ -413,6 +413,65 @@ class CopyTest {
         Assert.assertEquals(0, onExitForward.size)
     }
 
+<<<<<<< Updated upstream
+=======
+    @Test
+    fun includeCopyAsDSpec() {
+        testCpyInclusion("TSTCPY02")
+    }
+
+    @Test
+    fun includeCopyAsCSpec() {
+        testCpyInclusion("TSTCPY03")
+    }
+
+    @Test
+    fun includeCopyWithFifthCharsNotBlank() {
+        testCpyInclusion("TSTCPY04")
+    }
+
+    @Test
+    fun includeCopyWithApiExtension() {
+        testCpyInclusion("TSTCPY06", "I am copy with .api extension")
+    }
+
+    @Test
+    fun includeNotFoundCopy() {
+        var catchedErrorEvent: ErrorEvent? = null
+        val callback = JarikoCallback().apply {
+            onError = { errorEvent ->
+                println(errorEvent)
+                catchedErrorEvent = errorEvent
+            }
+        }
+        kotlin.runCatching {
+            getProgram(
+                nameOrSource = "TSTCPY05",
+                programFinders = listOf(DirRpgProgramFinder(Paths.get("src", "test", "resources").toFile()))
+            ).singleCall(listOf(), configuration = Configuration().apply {
+                jarikoCallback = callback
+                options = Options(debuggingInformation = true)
+            })
+        }.onSuccess {
+            Assert.fail("This program cannot be executed successfully")
+        }.onFailure {
+            Assert.assertNotNull(catchedErrorEvent)
+        }
+    }
+
+    private fun testCpyInclusion(pgm: String, expected: String = "Hi I am QILEGEN,TSTCPY01") {
+        var message = ""
+        getProgram(
+            nameOrSource = pgm,
+            programFinders = listOf(DirRpgProgramFinder(Paths.get("src", "test", "resources").toFile())),
+            systemInterface = JavaSystemInterface().apply {
+                onDisplay = { mess, _ -> message = mess }
+            }
+        ).singleCall(listOf())
+        Assert.assertEquals(expected, message)
+    }
+
+>>>>>>> Stashed changes
     private fun createCopyBlocks(): CopyBlocks {
         val copyBlocks = CopyBlocks()
         val cpy1 = CopyBlock(CopyId(member = "CPY1"), start = 4, end = 6)

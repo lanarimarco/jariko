@@ -21,6 +21,12 @@ import com.smeup.rpgparser.execution.MainExecutionContext
 import com.smeup.rpgparser.interpreter.PreprocessingLogEnd
 import com.smeup.rpgparser.interpreter.PreprocessingLogStart
 import com.smeup.rpgparser.parsing.ast.SourceProgram
+<<<<<<< Updated upstream
+=======
+import com.smeup.rpgparser.parsing.parsetreetoast.fireErrorEvent
+import com.strumenta.kolasu.model.Point
+import com.strumenta.kolasu.model.Position
+>>>>>>> Stashed changes
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import java.io.BufferedReader
@@ -57,28 +63,40 @@ private fun String.includesCopy(
         // Skip commented line
         if (null != matcher.group(2)) continue
         val copyId = matcher.group(1).copyId()
+        var catchedError: Throwable? = null
         // println("Processing $copyId")
-        kotlin.runCatching {
-            val copyStartLine = this.substring(0, matcher.start(1)).lines().size + currentLine + addedLines
-            onStartInclusion.invoke(copyId, copyStartLine)
-            val copy = (findCopy.invoke(copyId))?.includesCopy(
-                findCopy = findCopy,
-                onStartInclusion = onStartInclusion,
-                onEndInclusion = onEndInclusion,
-                currentLine = copyStartLine
-            )?.surroundWithPreprocessingAnnotations(copyId)?.apply {
-            } ?: let {
-                println("Copy ${matcher.group()} not found".yellow())
-                matcher.group()
-            }
-            val copyContent = copy.replace("$", "\\$")
-            val copyEndLine = copyStartLine + copyContent.lines().size
-            onEndInclusion.invoke(copyEndLine)
-            addedLines += copyContent.lines().size - 1
-            matcher.appendReplacement(sb, copyContent)
+        val copyStartLine = this.substring(0, matcher.start(1)).lines().size + currentLine + addedLines
+        onStartInclusion.invoke(copyId, copyStartLine)
+        val copy = kotlin.runCatching {
+            findCopy.invoke(copyId)
         }.onFailure {
+<<<<<<< Updated upstream
             throw IllegalStateException("Error on inclusion copy: ${matcher.group(0)}\nsource:\n$this", it)
+=======
+            catchedError = it
+        }.getOrNull()?.includesCopy(
+            findCopy = findCopy,
+            onStartInclusion = onStartInclusion,
+            onEndInclusion = onEndInclusion,
+            currentLine = copyStartLine
+        )?.surroundWithPreprocessingAnnotations(copyId)?.apply {
+        } ?: let {
+            println("Copy ${matcher.group()} not found".yellow())
+            matcher.group()
+>>>>>>> Stashed changes
         }
+        val copyContent = copy.replace("$", "\\$")
+        val copyEndLine = copyStartLine + copyContent.lines().size
+        onEndInclusion.invoke(copyEndLine)
+        catchedError?.let {
+            AstCreatingException(this, it).fireErrorEvent(
+            position = Position(
+                start = Point(copyStartLine, 0),
+                end = Point(copyStartLine, 80)
+            )
+        )}
+        addedLines += copyContent.lines().size - 1
+        matcher.appendReplacement(sb, copyContent)
     }
     matcher.appendTail(sb)
     return sb.toString()
