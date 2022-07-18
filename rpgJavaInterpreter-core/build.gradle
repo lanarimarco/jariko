@@ -45,6 +45,7 @@ def antlrVersion = ext.antlr_version
 def generatedMain = "generated-src/antlr/main"
 def generatedMainFile = file(generatedMain)
 
+
 dependencies {
     antlr "org.antlr:antlr4:$antlr_version"
     compile "org.antlr:antlr4-runtime:$antlr_version"
@@ -378,6 +379,15 @@ task sourcesJar(type: Jar) {
 
 artifacts {
     archives javadocJar, sourcesJar
+}
+
+task createVersion() {
+    new File(projectDir, "src/main/resources/META-INF/com.smeup.jariko/version.txt").text = """
+Version: $project.version
+Branch: ${grgit.branch.current.name}
+Revision: ${grgit.head().abbreviatedId}
+Buildtime: ${new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())}
+""".trim()
 }
 
 check.dependsOn compileAllMutes,runMutes
