@@ -15,3 +15,4 @@ rpgJavaInterpreter-core/generated-src/
 rpgJavaInterpreter-core/src/main/gen/
 lib
 *.tokens
+/rpgJavaInterpreter-core/src/main/resources/META-INF/com.smeup.jariko/version.txt
