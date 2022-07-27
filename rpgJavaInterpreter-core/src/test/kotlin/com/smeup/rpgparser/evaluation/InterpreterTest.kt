@@ -1977,4 +1977,9 @@ Test 6
     fun executeTSTDS01() {
         assertEquals(listOf("Name", "Value"), outputOf("TSTDS01"))
     }
+
+    @Test
+    fun executeCMPSTMTIND() {
+        assertEquals(listOf("DO_2"), outputOf("CMPSTMTIND"))
+    }
 }
