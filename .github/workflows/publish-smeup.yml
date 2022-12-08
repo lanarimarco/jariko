@@ -20,7 +20,6 @@ jobs:
           echo "signing.keyId=${{ secrets.GPG_KEY_ID }}" >> ~/.gradle/gradle.properties
           echo "signing.password=${{ secrets.GPG_PASSPHRASE }}" >> ~/.gradle/gradle.properties
           echo "signing.secretKeyRingFile=${HOME}/private.gpg" >> ~/.gradle/gradle.properties
-#          echo "smeupUsername=${{ secrets.NEXUS_USER }}" >> ~/.gradle/gradle.properties
           echo "smeupUsername=Dum|drat1" >> ~/.gradle/gradle.properties
           echo "smeupPassword=${{ secrets.NEXUS_PASSWORD }}" >> ~/.gradle/gradle.properties
           echo "gradle.properties"
