@@ -1,18 +1,7 @@
 name: Deploy to internal smeup nexus
 on:
-  workflow_dispatch:
-    inputs:
-      NEXUS_USER:
-        description: 'Nexus user'
-        required: true
-        type: string
-      NEXUS_PASSWORD:
-        description: 'Nexus password'
-        required: true
-        type: string
-  # push:
-    # branches: [master, develop]
-    # branches: ['feature/add_nexus_deploy_action']
+  push:
+    branches: [master, develop]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,8 +19,8 @@ jobs:
           echo "signing.keyId=${{ secrets.GPG_KEY_ID }}" >> ~/.gradle/gradle.properties
           echo "signing.password=${{ secrets.GPG_PASSPHRASE }}" >> ~/.gradle/gradle.properties
           echo "signing.secretKeyRingFile=${HOME}/private.gpg" >> ~/.gradle/gradle.properties
-          echo "smeupUsername=${{ inputs.NEXUS_USER }}"" >> ~/.gradle/gradle.properties
-          echo "smeupPassword=${{ inputs.NEXUS_PASSWORD }}" >> ~/.gradle/gradle.properties
+          echo "smeupUsername=${{ secrets.NEXUS_USER }}"" >> ~/.gradle/gradle.properties
+          echo "smeupPassword=${{ secrets.NEXUS_PASSWORD }}" >> ~/.gradle/gradle.properties
           echo "gradle.properties"
           tail ~/.gradle/gradle.properties
       # deploy
