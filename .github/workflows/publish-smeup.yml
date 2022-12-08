@@ -12,7 +12,7 @@ on:
         type: string
   push:
     # branches: [master, develop]
-    branches: ['feature/add_nexus_deploy_action']
+    # branches: ['feature/add_nexus_deploy_action']
 jobs:
   build:
     runs-on: ubuntu-latest
