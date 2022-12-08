@@ -22,6 +22,8 @@ jobs:
           echo "signing.secretKeyRingFile=${HOME}/private.gpg" >> ~/.gradle/gradle.properties
           echo "smeupUsername=${{ secrets.NEXUS_USER }}" >> ~/.gradle/gradle.properties
           echo "smeupPassword=${{ secrets.NEXUS_PASSWORD }}" >> ~/.gradle/gradle.properties
+          echo "gradle.properties"
+          tail ~/.gradle/gradle.properties
       # deploy
       - uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
