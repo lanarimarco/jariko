@@ -10,7 +10,7 @@ on:
         description: 'Nexus password'
         required: true
         type: string
-  push:
+  # push:
     # branches: [master, develop]
     # branches: ['feature/add_nexus_deploy_action']
 jobs:
