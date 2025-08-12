@@ -123,6 +123,7 @@ Always run these locally before pushing changes.
 - `gradle.properties` - Version and JVM configuration (Java 11)
 - `settings.gradle` - Multi-module project setup
 - `.github/workflows/unit-test.yml` - CI pipeline
+- `rpgJavaInterpreter-core/src/test/kotlin/com/smeup/rpgparser/AbstractTest.kt` - Base class for all new tests suite
 
 ### Development Files and Locations
 - **RPG used in units tests**: `rpgJavaInterpreter-core/src/test/resources/`
