@@ -1060,6 +1060,12 @@ internal fun Cspec_fixed_standardContext.toAst(conf: ToAstConfiguration = ToAstC
         this.csDEALLOC() != null -> this.csDEALLOC()
             .let { it.cspec_fixed_standard_parts().validate(stmt = it.toAst(conf), conf = conf) }
 
+        this.csIN() != null -> this.csIN()
+            .let { it.cspec_fixed_standard_parts().validate(stmt = it.toAst(conf), conf = conf) }
+
+        this.csOUT() != null -> this.csOUT()
+            .let { it.cspec_fixed_standard_parts().validate(stmt = it.toAst(conf), conf = conf) }
+
         else -> todo(conf = conf)
     }
 }
@@ -2413,5 +2419,69 @@ private fun Map<FileDefinition, List<DataDefinition>>.processWithSpecifications(
 }
 
 private fun String.isStringLiteral(): Boolean = startsWith('\'') && endsWith('\'')
+
+internal fun CsINContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()): InStmt {
+    val position = toPosition(conf.considerPosition)
+    val cspecParts = this.cspec_fixed_standard_parts()
+    
+    // Factor1: Check for *LOCK
+    val lock = cspecParts.factor().factorContent().any { 
+        it.text?.trim()?.uppercase() == "*LOCK" 
+    }
+    
+    // Factor2: Data area name (optional when using DEFINE)
+    val dataAreaName = when {
+        cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank() -> 
+            cspecParts.factor2Expression(conf)
+        else -> null
+    }
+    
+    // Result: Target field where data will be placed
+    val target = cspecParts.result.toAst(conf) as? AssignableExpression
+        ?: throw IllegalArgumentException("IN operation requires a valid result field at ${position.atLine()}")
+    
+    // Right indicators (optional error handling)
+    val rightIndicators = cspecParts.rightIndicators()
+    
+    return InStmt(
+        lock = lock,
+        dataAreaName = dataAreaName,
+        target = target,
+        rightIndicators = rightIndicators,
+        position = position
+    )
+}
+
+internal fun CsOUTContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()): OutStmt {
+    val position = toPosition(conf.considerPosition)
+    val cspecParts = this.cspec_fixed_standard_parts()
+    
+    // Factor1: Check for *LOCK
+    val lock = cspecParts.factor().factorContent().any { 
+        it.text?.trim()?.uppercase() == "*LOCK" 
+    }
+    
+    // Factor2: Data area name (optional when using DEFINE)
+    val dataAreaName = when {
+        cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank() -> 
+            cspecParts.factor2Expression(conf)
+        else -> null
+    }
+    
+    // Result: Source field containing data to write
+    val source = cspecParts.resultExpression(conf)
+        ?: throw IllegalArgumentException("OUT operation requires a valid result field at ${position.atLine()}")
+    
+    // Right indicators (optional error handling)
+    val rightIndicators = cspecParts.rightIndicators()
+    
+    return OutStmt(
+        lock = lock,
+        dataAreaName = dataAreaName,
+        source = source,
+        rightIndicators = rightIndicators,
+        position = position
+    )
+}
 
 private fun ResultIndicatorContext.toIndicatorKey() = text.trim().takeIf { it.isNotBlank() }?.toIndicatorKey()

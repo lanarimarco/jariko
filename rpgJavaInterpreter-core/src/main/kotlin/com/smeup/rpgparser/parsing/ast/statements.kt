@@ -3107,6 +3107,124 @@ data class ExecSqlStmt(
     }
 }
 
+/**
+ * IN operation code - reads data from a data area into a program field or data structure.
+ * Supports the following syntax:
+ * - Factor1: Can contain *LOCK to lock the data area during the read operation
+ * - Factor2: The name of the data area to read from (can be omitted when using DEFINE)
+ * - Result: The field or data structure where the data will be placed
+ * - Indicators: Optional error handling indicators
+ */
+@Serializable
+data class InStmt(
+    val lock: Boolean,
+    val dataAreaName: Expression?,
+    val target: AssignableExpression,
+    val rightIndicators: WithRightIndicators? = null,
+    override val position: Position? = null
+) : Statement(position), WithRightIndicators by (rightIndicators ?: RightIndicators(null, null, null)) {
+    override val loggableEntityName: String
+        get() = "IN"
+
+    override fun execute(interpreter: InterpreterCore) {
+        try {
+            // Determine the data area name
+            val dataAreaNameStr = when {
+                dataAreaName != null -> interpreter.eval(dataAreaName).asString().value
+                else -> {
+                    // When Factor2 is omitted, we need to find the data area name from DEFINE
+                    // This requires looking up the target variable in DEFINE statements
+                    findDataAreaNameFromDefine(interpreter, target)
+                }
+            }
+
+            // Call the callback to read from the data area
+            val dataValue = interpreter.getConfiguration().jarikoCallback.readDataArea(dataAreaNameStr, lock)
+
+            // Assign the value to the target
+            interpreter.assign(target, StringValue(dataValue))
+
+            // Set indicators for success (no error)
+            if (rightIndicators?.allPresent() == true) {
+                interpreter.setIndicators(this, BooleanValue.FALSE, BooleanValue.FALSE, BooleanValue.FALSE)
+            }
+        } catch (e: Exception) {
+            // Set error indicator if available
+            if (rightIndicators?.allPresent() == true) {
+                interpreter.setIndicators(this, BooleanValue.TRUE, BooleanValue.FALSE, BooleanValue.FALSE)
+            }
+            throw RuntimeException("Error reading data area: ${e.message}", e)
+        }
+    }
+
+    private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, target: AssignableExpression): String {
+        // For now, return a placeholder. In a full implementation, we would need to:
+        // 1. Look up the target variable name
+        // 2. Find the corresponding DEFINE statement that created this variable
+        // 3. Extract the original data area name from that DEFINE statement
+        // This requires additional context that isn't readily available here
+        return target.toString() // Simplified implementation
+    }
+}
+
+/**
+ * OUT operation code - writes data from a program field or data structure to a data area.
+ * Supports the following syntax:
+ * - Factor1: Can contain *LOCK to lock the data area during the write operation
+ * - Factor2: The name of the data area to write to (can be omitted when using DEFINE)
+ * - Result: The field or data structure containing the data to write
+ * - Indicators: Optional error handling indicators
+ */
+@Serializable
+data class OutStmt(
+    val lock: Boolean,
+    val dataAreaName: Expression?,
+    val source: Expression,
+    val rightIndicators: WithRightIndicators? = null,
+    override val position: Position? = null
+) : Statement(position), WithRightIndicators by (rightIndicators ?: RightIndicators(null, null, null)) {
+    override val loggableEntityName: String
+        get() = "OUT"
+
+    override fun execute(interpreter: InterpreterCore) {
+        try {
+            // Determine the data area name
+            val dataAreaNameStr = when {
+                dataAreaName != null -> interpreter.eval(dataAreaName).asString().value
+                else -> {
+                    // When Factor2 is omitted, we need to find the data area name from DEFINE
+                    findDataAreaNameFromDefine(interpreter, source)
+                }
+            }
+
+            // Get the value to write
+            val dataValue = interpreter.eval(source).asString().value
+
+            // Call the callback to write to the data area
+            interpreter.getConfiguration().jarikoCallback.writeDataArea(dataAreaNameStr, dataValue, lock)
+
+            // Set indicators for success (no error)
+            if (rightIndicators?.allPresent() == true) {
+                interpreter.setIndicators(this, BooleanValue.FALSE, BooleanValue.FALSE, BooleanValue.FALSE)
+            }
+        } catch (e: Exception) {
+            // Set error indicator if available
+            if (rightIndicators?.allPresent() == true) {
+                interpreter.setIndicators(this, BooleanValue.TRUE, BooleanValue.FALSE, BooleanValue.FALSE)
+            }
+            throw RuntimeException("Error writing to data area: ${e.message}", e)
+        }
+    }
+
+    private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, source: Expression): String {
+        // For now, return a placeholder. In a full implementation, we would need to:
+        // 1. Look up the source variable name
+        // 2. Find the corresponding DEFINE statement that created this variable
+        // 3. Extract the original data area name from that DEFINE statement
+        return source.toString() // Simplified implementation
+    }
+}
+
 @Serializable
 data class CsqlTextStmt(
     override val position: Position? = null

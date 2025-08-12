@@ -368,6 +368,28 @@ data class JarikoCallback(
         } else {
             StringBuilderWrapper(value)
         }
+    },
+
+    /**
+     * Called to read from a data area when executing an IN statement.
+     * The default implementation returns the data area name as the value.
+     * @param dataAreaName The name of the data area to read from.
+     * @param lock Whether the data area should be locked during the operation.
+     * @return The value read from the data area.
+     */
+    var readDataArea: ((dataAreaName: String, lock: Boolean) -> String) = { dataAreaName, _ ->
+        dataAreaName // Default implementation just returns the data area name
+    },
+
+    /**
+     * Called to write to a data area when executing an OUT statement.
+     * The default implementation does nothing.
+     * @param dataAreaName The name of the data area to write to.
+     * @param value The value to write to the data area.
+     * @param lock Whether the data area should be locked during the operation.
+     */
+    var writeDataArea: ((dataAreaName: String, value: String, lock: Boolean) -> Unit) = { _, _, _ ->
+        // Default implementation does nothing
     }
 )
 
