@@ -3158,12 +3158,17 @@ data class InStmt(
     }
 
     private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, target: AssignableExpression): String {
-        // For now, return a placeholder. In a full implementation, we would need to:
-        // 1. Look up the target variable name
+        // TODO: In a full implementation, we would need to:
+        // 1. Look up the target variable name from the target expression
         // 2. Find the corresponding DEFINE statement that created this variable
         // 3. Extract the original data area name from that DEFINE statement
         // This requires additional context that isn't readily available here
-        return target.toString() // Simplified implementation
+        // For now, we'll use the target name as the data area name
+        return when (target) {
+            is DataRefExpr -> target.variable.name
+            is QualifiedAccessExpr -> target.field
+            else -> target.toString()
+        }
     }
 }
 
@@ -3217,11 +3222,16 @@ data class OutStmt(
     }
 
     private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, source: Expression): String {
-        // For now, return a placeholder. In a full implementation, we would need to:
-        // 1. Look up the source variable name
+        // TODO: In a full implementation, we would need to:
+        // 1. Look up the source variable name from the source expression
         // 2. Find the corresponding DEFINE statement that created this variable
         // 3. Extract the original data area name from that DEFINE statement
-        return source.toString() // Simplified implementation
+        // For now, we'll use the source name as the data area name
+        return when (source) {
+            is DataRefExpr -> source.variable.name
+            is QualifiedAccessExpr -> source.field
+            else -> source.toString()
+        }
     }
 }
 
