@@ -97,11 +97,9 @@ java -jar rpgJavaInterpreter-core/build/libs/rpgJavaInterpreter-core-mute-all.ja
 ## Validation and Testing
 
 ### Always validate changes by:
-1. **Building the project**: `./gradlew build` (8-10 minutes)
+
+1. **Formatting check**: `./gradlew ktlintCheck` (1 second)
 2. **Running code checks**: `./gradlew check` (6-8 minutes)
-3. **Formatting check**: `./gradlew ktlintCheck` (1 second)
-4. **Testing RPG execution**: Run a simple RPG program: `java -jar rpgJavaInterpreter-core/build/libs/rpgJavaInterpreter-core-all.jar -psd examples/src/main/resources/rpg ECHO_PGM`
-5. **Testing interactive shell**: Verify shell mode works with `help` command
 
 ### For CI/CD compatibility:
 The GitHub Actions workflow runs:
@@ -127,8 +125,8 @@ Always run these locally before pushing changes.
 - `.github/workflows/unit-test.yml` - CI pipeline
 
 ### Development Files and Locations
-- **RPG examples**: `examples/src/main/resources/rpg/`
-- **Test files**: `examples/src/test/resources/rpg/`
+- **RPG used in units tests**: `rpgJavaInterpreter-core/src/test/resources/`
+- **Unit tests**: `rpgJavaInterpreter-core/src/test/kotlin/com/smeup/rpgparser/`
 - **MUTE tests**: Files starting with `MUTE*.rpgle`
 - **Documentation**: `docs/` (development.md, logging.md, mute.md, etc.)
 
