@@ -3166,7 +3166,7 @@ data class InStmt(
         // For now, we'll use the target name as the data area name
         return when (target) {
             is DataRefExpr -> target.variable.name
-            is QualifiedAccessExpr -> target.field
+            is QualifiedAccessExpr -> target.field.name
             else -> target.toString()
         }
     }
@@ -3229,7 +3229,7 @@ data class OutStmt(
         // For now, we'll use the source name as the data area name
         return when (source) {
             is DataRefExpr -> source.variable.name
-            is QualifiedAccessExpr -> source.field
+            is QualifiedAccessExpr -> source.field.name
             else -> source.toString()
         }
     }
