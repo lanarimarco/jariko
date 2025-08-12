@@ -122,7 +122,7 @@ Always run these locally before pushing changes.
 
 ### Important Files
 - `build.gradle` - Main build configuration
-- `gradle.properties` - Version and JVM configuration (Java 17)
+- `gradle.properties` - Version and JVM configuration (Java 11)
 - `settings.gradle` - Multi-module project setup
 - `.github/workflows/unit-test.yml` - CI pipeline
 
@@ -155,7 +155,7 @@ Control interpreter behavior with system properties:
 
 ### Java Version Compatibility
 - **Error**: "No matching variant" or Java compatibility issues
-- **Solution**: Ensure Java 17+ is installed and `JAVA_HOME` is set correctly
+- **Solution**: Ensure Java 11+ is installed and `JAVA_HOME` is set correctly
 
 ### Build Failures
 - **Error**: Grammar generation fails
