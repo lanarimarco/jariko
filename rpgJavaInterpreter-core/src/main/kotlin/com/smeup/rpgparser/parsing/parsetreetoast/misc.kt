@@ -1857,11 +1857,12 @@ internal fun CsDEFINEContext.toAst(conf: ToAstConfiguration = ToAstConfiguration
     val newVarName = cspecParts.result.text
     val position = toPosition(conf.considerPosition)
 
-    // Check if Factor1 contains *DTAARA - try multiple approaches
+    // Check if Factor1 contains *DTAARA or DTAARA - try multiple approaches
     val factor1Text = cspecParts.factor()?.text?.trim()?.uppercase()
-    val isDataAreaDefine = factor1Text == "*DTAARA" ||
+    val isDataAreaDefine = factor1Text == "*DTAARA" || factor1Text == "DTAARA" ||
         cspecParts.factor().factorContent().any {
-            it.text?.trim()?.uppercase() == "*DTAARA"
+            val text = it.text?.trim()?.uppercase()
+            text == "*DTAARA" || text == "DTAARA"
         }
 
     return DefineStmt(originalVarName, newVarName, isDataAreaDefine, position)
