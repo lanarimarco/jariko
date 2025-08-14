@@ -1635,6 +1635,7 @@ data class ClearStmt(
 data class DefineStmt(
     val originalName: String,
     val newVarName: String,
+    val isDataAreaDefine: Boolean = false,
     override val position: Position? = null
 ) : Statement(position), StatementThatCanDefineData {
     companion object {
@@ -1647,6 +1648,24 @@ data class DefineStmt(
     override fun dataDefinition(): List<InStatementDataDefinition> {
         val containingCU = this.ancestor(CompilationUnit::class.java)
             ?: return emptyList()
+
+        // Handle *DTAARA DEFINE statements differently
+        if (isDataAreaDefine) {
+            // For data area defines, we need to find the existing definition that the newVarName refers to
+            // and create a new definition with the same type
+            val existingDefinition = containingCU.dataDefinitions.find { it.name == newVarName }
+                ?: containingCU.getInStatementDataDefinitions().find { it.name == newVarName }
+            if (existingDefinition != null) {
+                val newType = if (existingDefinition.type is DataStructureType) {
+                    StringType.createInstance(existingDefinition.elementSize())
+                } else existingDefinition.type
+                return listOf(InStatementDataDefinition(newVarName, newType, position))
+            } else {
+                // If we can't find the existing definition, assume it's a string
+                // This might happen if the D-spec definition comes after the DEFINE
+                return listOf(InStatementDataDefinition(newVarName, StringType(0, false), position))
+            }
+        }
 
         val normalizedOriginalName = originalName.trim().uppercase()
         val indicatorMatch = INDICATOR_PATTERN.find(normalizedOriginalName)

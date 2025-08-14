@@ -1852,10 +1852,19 @@ internal fun CsCLEARContext.toAst(conf: ToAstConfiguration = ToAstConfiguration(
 }
 
 internal fun CsDEFINEContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()): DefineStmt {
-    val originalVarName = this.cspec_fixed_standard_parts().factor2.text
-    val newVarName = this.cspec_fixed_standard_parts().result.text
+    val cspecParts = this.cspec_fixed_standard_parts()
+    val originalVarName = cspecParts.factor2.text
+    val newVarName = cspecParts.result.text
     val position = toPosition(conf.considerPosition)
-    return DefineStmt(originalVarName, newVarName, position)
+
+    // Check if Factor1 contains *DTAARA - try multiple approaches
+    val factor1Text = cspecParts.factor()?.text?.trim()?.uppercase()
+    val isDataAreaDefine = factor1Text == "*DTAARA" ||
+        cspecParts.factor().factorContent().any {
+            it.text?.trim()?.uppercase() == "*DTAARA"
+        }
+
+    return DefineStmt(originalVarName, newVarName, isDataAreaDefine, position)
 }
 
 private fun QualifiedTargetContext.getFieldName(): String {
@@ -2429,16 +2438,39 @@ internal fun CsINContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()):
         it.text?.trim()?.uppercase() == "*LOCK"
     }
 
-    // Factor2: Data area name (optional when using DEFINE)
-    val dataAreaName = when {
-        cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank() ->
-            cspecParts.factor2Expression(conf)
-        else -> null
-    }
+    // Handle different IN syntax patterns:
+    // 1. C *LOCK IN         TARGET    - Factor2 blank, Result is target
+    // 2. C *LOCK IN DTAREA  TARGET    - Factor2 is data area, Result is target  
+    // 3. C       IN FIELD             - Factor2 is field (with DEFINE), Result blank
+    val dataAreaName: Expression?
+    val target: AssignableExpression
 
-    // Result: Target field where data will be placed
-    val target = cspecParts.result.toAst(conf) as? AssignableExpression
-        ?: throw IllegalArgumentException("IN operation requires a valid result field at ${position.atLine()}")
+    val hasResult = cspecParts.result != null && cspecParts.result.text.isNotBlank()
+    val hasFactor2 = cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank()
+
+    when {
+        hasResult && hasFactor2 -> {
+            // Pattern: C *LOCK IN DTAREA TARGET - Factor2 is data area, Result is target
+            dataAreaName = cspecParts.factor2Expression(conf)
+            target = cspecParts.result.toAst(conf) as? AssignableExpression
+                ?: throw IllegalArgumentException("IN operation result field is not assignable at ${position.atLine()}")
+        }
+        hasResult && !hasFactor2 -> {
+            // Pattern: C *LOCK IN       TARGET - Factor2 blank, Result is target (use DEFINE to find data area)
+            dataAreaName = null
+            target = cspecParts.result.toAst(conf) as? AssignableExpression
+                ?: throw IllegalArgumentException("IN operation result field is not assignable at ${position.atLine()}")
+        }
+        !hasResult && hasFactor2 -> {
+            // Pattern: C       IN FIELD        - Factor2 is field (with DEFINE), Result blank
+            dataAreaName = null
+            target = cspecParts.factor2Expression(conf) as? AssignableExpression
+                ?: throw IllegalArgumentException("IN operation factor2 field is not assignable at ${position.atLine()}")
+        }
+        else -> {
+            throw IllegalArgumentException("IN operation requires either Factor2 or Result field at ${position.atLine()}")
+        }
+    }
 
     // Right indicators (optional error handling)
     val rightIndicators = cspecParts.rightIndicators()
@@ -2460,16 +2492,39 @@ internal fun CsOUTContext.toAst(conf: ToAstConfiguration = ToAstConfiguration())
         it.text?.trim()?.uppercase() == "*LOCK"
     }
 
-    // Factor2: Data area name (optional when using DEFINE)
-    val dataAreaName = when {
-        cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank() ->
-            cspecParts.factor2Expression(conf)
-        else -> null
-    }
+    // Handle different OUT syntax patterns:
+    // 1. C *LOCK OUT        SOURCE    - Factor2 blank, Result is source
+    // 2. C *LOCK OUT DTAREA SOURCE    - Factor2 is data area, Result is source
+    // 3. C       OUT FIELD            - Factor2 is field (with DEFINE), Result blank
+    val dataAreaName: Expression?
+    val source: Expression
 
-    // Result: Source field containing data to write
-    val source = cspecParts.resultExpression(conf)
-        ?: throw IllegalArgumentException("OUT operation requires a valid result field at ${position.atLine()}")
+    val hasResult = cspecParts.result != null && cspecParts.result.text.isNotBlank()
+    val hasFactor2 = cspecParts.factor2 != null && cspecParts.factor2.text.isNotBlank()
+
+    when {
+        hasResult && hasFactor2 -> {
+            // Pattern: C *LOCK OUT DTAREA SOURCE - Factor2 is data area, Result is source
+            dataAreaName = cspecParts.factor2Expression(conf)
+            source = cspecParts.resultExpression(conf)
+                ?: throw IllegalArgumentException("OUT operation result field is required at ${position.atLine()}")
+        }
+        hasResult && !hasFactor2 -> {
+            // Pattern: C *LOCK OUT       SOURCE - Factor2 blank, Result is source (use DEFINE to find data area)
+            dataAreaName = null
+            source = cspecParts.resultExpression(conf)
+                ?: throw IllegalArgumentException("OUT operation result field is required at ${position.atLine()}")
+        }
+        !hasResult && hasFactor2 -> {
+            // Pattern: C       OUT FIELD        - Factor2 is field (with DEFINE), Result blank
+            dataAreaName = null
+            source = cspecParts.factor2Expression(conf)
+                ?: throw IllegalArgumentException("OUT operation factor2 field is required at ${position.atLine()}")
+        }
+        else -> {
+            throw IllegalArgumentException("OUT operation requires either Factor2 or Result field at ${position.atLine()}")
+        }
+    }
 
     // Right indicators (optional error handling)
     val rightIndicators = cspecParts.rightIndicators()
