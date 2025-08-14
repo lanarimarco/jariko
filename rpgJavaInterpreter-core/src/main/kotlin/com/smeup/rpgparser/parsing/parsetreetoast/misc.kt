@@ -1860,10 +1860,10 @@ internal fun CsDEFINEContext.toAst(conf: ToAstConfiguration = ToAstConfiguration
     // Check if Factor1 contains *DTAARA or DTAARA - try multiple approaches
     val factor1Text = cspecParts.factor()?.text?.trim()?.uppercase()
     val isDataAreaDefine = factor1Text == "*DTAARA" || factor1Text == "DTAARA" ||
-        cspecParts.factor().factorContent().any {
+        (cspecParts.factor()?.factorContent()?.any {
             val text = it.text?.trim()?.uppercase()
             text == "*DTAARA" || text == "DTAARA"
-        }
+        } ?: false)
 
     return DefineStmt(originalVarName, newVarName, isDataAreaDefine, position)
 }
@@ -2435,9 +2435,9 @@ internal fun CsINContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()):
     val cspecParts = this.cspec_fixed_standard_parts()
 
     // Factor1: Check for *LOCK
-    val lock = cspecParts.factor().factorContent().any {
+    val lock = cspecParts.factor()?.factorContent()?.any {
         it.text?.trim()?.uppercase() == "*LOCK"
-    }
+    } ?: false
 
     // Handle different IN syntax patterns:
     // 1. C *LOCK IN         TARGET    - Factor2 blank, Result is target
@@ -2489,9 +2489,9 @@ internal fun CsOUTContext.toAst(conf: ToAstConfiguration = ToAstConfiguration())
     val cspecParts = this.cspec_fixed_standard_parts()
 
     // Factor1: Check for *LOCK
-    val lock = cspecParts.factor().factorContent().any {
+    val lock = cspecParts.factor()?.factorContent()?.any {
         it.text?.trim()?.uppercase() == "*LOCK"
-    }
+    } ?: false
 
     // Handle different OUT syntax patterns:
     // 1. C *LOCK OUT        SOURCE    - Factor2 blank, Result is source

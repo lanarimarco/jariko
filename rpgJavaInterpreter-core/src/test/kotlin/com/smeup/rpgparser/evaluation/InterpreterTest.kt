@@ -2859,6 +2859,202 @@ Test 6
         }
     }
 
+    @Test
+    fun executeDTAREAREAD() {
+        val readDataAreaCalls = mutableListOf<Triple<String, Boolean, String>>() // dataAreaName, lock, returnValue
+        val writeDataAreaCalls = mutableListOf<Triple<String, String, Boolean>>() // dataAreaName, value, lock
+
+        val configuration = Configuration().apply {
+            jarikoCallback = JarikoCallback().apply {
+                readDataArea = { dataAreaName, lock ->
+                    val returnValue = "DATA_FROM_$dataAreaName"
+                    readDataAreaCalls.add(Triple(dataAreaName, lock, returnValue))
+                    returnValue
+                }
+                writeDataArea = { dataAreaName, value, lock ->
+                    writeDataAreaCalls.add(Triple(dataAreaName, value, lock))
+                }
+            }
+        }
+
+        val systemInterface = JavaSystemInterface().apply {
+            onDisplay = { message, _ ->
+                // Capture display messages for verification
+            }
+        }
+
+        executePgm("DTAREAREAD", configuration = configuration, systemInterface = systemInterface)
+
+        // Verify that readDataArea callback was called
+        assertTrue(readDataAreaCalls.isNotEmpty(), "readDataArea callback should have been called")
+
+        // Check the callback parameters
+        val firstCall = readDataAreaCalls.first()
+        assertEquals("C£C£E00D", firstCall.first, "Data area name should be C£C£E00D")
+        assertTrue(firstCall.second, "Lock should be true for *LOCK operation")
+        assertEquals("DATA_FROM_C£C£E00D", firstCall.third, "Return value should match pattern")
+
+        // Verify writeDataArea was not called for read operation
+        assertTrue(writeDataAreaCalls.isEmpty(), "writeDataArea callback should not have been called for read operation")
+    }
+
+    @Test
+    fun executeDTAREAWRITE() {
+        val readDataAreaCalls = mutableListOf<Triple<String, Boolean, String>>()
+        val writeDataAreaCalls = mutableListOf<Triple<String, String, Boolean>>()
+
+        val configuration = Configuration().apply {
+            jarikoCallback = JarikoCallback().apply {
+                readDataArea = { dataAreaName, lock ->
+                    val returnValue = "INITIAL_DATA"
+                    readDataAreaCalls.add(Triple(dataAreaName, lock, returnValue))
+                    returnValue
+                }
+                writeDataArea = { dataAreaName, value, lock ->
+                    writeDataAreaCalls.add(Triple(dataAreaName, value, lock))
+                }
+            }
+        }
+
+        val systemInterface = JavaSystemInterface().apply {
+            onDisplay = { message, _ ->
+                // Capture display messages for verification
+            }
+        }
+
+        executePgm("DTAREAWRITE", configuration = configuration, systemInterface = systemInterface)
+
+        // Verify that writeDataArea callback was called
+        assertTrue(writeDataAreaCalls.isNotEmpty(), "writeDataArea callback should have been called")
+
+        // Check the callback parameters
+        val firstWriteCall = writeDataAreaCalls.first()
+        assertEquals("C£C£E00D", firstWriteCall.first, "Data area name should be C£C£E00D")
+        assertEquals("WRITTEN", firstWriteCall.second.trim(), "Value should be WRITTEN")
+        assertFalse(firstWriteCall.third, "Lock should be false for regular OUT operation")
+    }
+
+    @Test
+    fun executeDTAREAREADIND() {
+        val readDataAreaCalls = mutableListOf<Triple<String, Boolean, String>>()
+        val writeDataAreaCalls = mutableListOf<Triple<String, String, Boolean>>()
+
+        val configuration = Configuration().apply {
+            jarikoCallback = JarikoCallback().apply {
+                readDataArea = { dataAreaName, lock ->
+                    val returnValue = "INDICATOR_TEST_DATA"
+                    readDataAreaCalls.add(Triple(dataAreaName, lock, returnValue))
+                    returnValue
+                }
+                writeDataArea = { dataAreaName, value, lock ->
+                    writeDataAreaCalls.add(Triple(dataAreaName, value, lock))
+                }
+            }
+        }
+
+        val systemInterface = JavaSystemInterface().apply {
+            onDisplay = { message, _ ->
+                // Capture display messages for verification
+            }
+        }
+
+        executePgm("DTAREAREADIND", configuration = configuration, systemInterface = systemInterface)
+
+        // Verify that readDataArea callback was called
+        assertTrue(readDataAreaCalls.isNotEmpty(), "readDataArea callback should have been called")
+
+        // Check the callback parameters
+        val firstCall = readDataAreaCalls.first()
+        assertEquals("C£C£E00D", firstCall.first, "Data area name should be C£C£E00D")
+        assertFalse(firstCall.second, "Lock should be false for regular IN operation without *LOCK")
+        assertEquals("INDICATOR_TEST_DATA", firstCall.third, "Return value should match pattern")
+
+        // Verify writeDataArea was not called for read operation
+        assertTrue(writeDataAreaCalls.isEmpty(), "writeDataArea callback should not have been called for read operation")
+    }
+
+    @Test
+    fun executeDTAREAPROC() {
+        val readDataAreaCalls = mutableListOf<Triple<String, Boolean, String>>()
+        val writeDataAreaCalls = mutableListOf<Triple<String, String, Boolean>>()
+
+        val configuration = Configuration().apply {
+            jarikoCallback = JarikoCallback().apply {
+                readDataArea = { dataAreaName, lock ->
+                    val returnValue = "FooBar   " // 10 chars to match DS size
+                    readDataAreaCalls.add(Triple(dataAreaName, lock, returnValue))
+                    returnValue
+                }
+                writeDataArea = { dataAreaName, value, lock ->
+                    writeDataAreaCalls.add(Triple(dataAreaName, value, lock))
+                }
+            }
+        }
+
+        val systemInterface = JavaSystemInterface().apply {
+            onDisplay = { message, _ ->
+                // Capture display messages for verification
+            }
+        }
+
+        executePgm("DTAREAPROC", configuration = configuration, systemInterface = systemInterface)
+
+        // Verify that both readDataArea and writeDataArea callbacks were called
+        assertTrue(readDataAreaCalls.isNotEmpty(), "readDataArea callback should have been called")
+        assertTrue(writeDataAreaCalls.isNotEmpty(), "writeDataArea callback should have been called")
+
+        // Check the read callback parameters
+        val firstReadCall = readDataAreaCalls.first()
+        assertEquals("APU001D1", firstReadCall.first, "Data area name should be APU001D1")
+        assertTrue(firstReadCall.second, "Lock should be true for *LOCK operation")
+
+        // Check the write callback parameters
+        val firstWriteCall = writeDataAreaCalls.first()
+        assertEquals("APU001D1", firstWriteCall.first, "Data area name should be APU001D1")
+        assertFalse(firstWriteCall.third, "Lock should be false for regular OUT operation")
+    }
+
+    @Test
+    fun executeDTAREAINPROC() {
+        val readDataAreaCalls = mutableListOf<Triple<String, Boolean, String>>()
+        val writeDataAreaCalls = mutableListOf<Triple<String, String, Boolean>>()
+
+        val configuration = Configuration().apply {
+            jarikoCallback = JarikoCallback().apply {
+                readDataArea = { dataAreaName, lock ->
+                    val returnValue = "Initial   " // 10 chars to match DS size
+                    readDataAreaCalls.add(Triple(dataAreaName, lock, returnValue))
+                    returnValue
+                }
+                writeDataArea = { dataAreaName, value, lock ->
+                    writeDataAreaCalls.add(Triple(dataAreaName, value, lock))
+                }
+            }
+        }
+
+        val systemInterface = JavaSystemInterface().apply {
+            onDisplay = { message, _ ->
+                // Capture display messages for verification
+            }
+        }
+
+        executePgm("DTAREAINPROC", configuration = configuration, systemInterface = systemInterface)
+
+        // Verify that both readDataArea and writeDataArea callbacks were called
+        assertTrue(readDataAreaCalls.isNotEmpty(), "readDataArea callback should have been called")
+        assertTrue(writeDataAreaCalls.isNotEmpty(), "writeDataArea callback should have been called")
+
+        // Check the read callback parameters
+        val firstReadCall = readDataAreaCalls.first()
+        assertEquals("APU001D1", firstReadCall.first, "Data area name should be APU001D1")
+        assertTrue(firstReadCall.second, "Lock should be true for *LOCK operation")
+
+        // Check the write callback parameters
+        val firstWriteCall = writeDataAreaCalls.first()
+        assertEquals("APU001D1", firstWriteCall.first, "Data area name should be APU001D1")
+        assertFalse(firstWriteCall.third, "Lock should be false for regular OUT operation")
+    }
+
     /**
      * A simple exception to stop execution on-demand
      */

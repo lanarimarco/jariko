@@ -1707,23 +1707,43 @@ data class DefineStmt(
                 // This check is necessary to avoid infinite recursion
                 throw Error("Data reference $originalName not resolved")
             }
-            /* Checking if the context is main or subroutine, to execute the right search about the InStatementsDataDefinition. */
-            val inStatementDataDefinition = when (this.parent) {
-                is Subroutine -> {
-                    this.findInLocalScope(originalName)
-                        ?: this.findInGlobalScope(containingCU, originalName)
-                        ?: throw Error("Data reference $originalName not resolved")
+            
+            try {
+                /* Checking if the context is main or subroutine, to execute the right search about the InStatementsDataDefinition. */
+                val inStatementDataDefinition = when (this.parent) {
+                    is Subroutine -> {
+                        this.findInLocalScope(originalName)
+                            ?: this.findInGlobalScope(containingCU, originalName)
+                            ?: throw Error("Data reference $originalName not resolved")
+                    }
+
+                    is MainBody -> {
+                        this.findInGlobalScope(containingCU, originalName) ?: throw Error("Data reference $originalName not resolved")
+                    }
+
+                    else -> throw Error("Data reference $originalName not resolved")
                 }
 
-                is MainBody -> {
-                    this.findInGlobalScope(containingCU, originalName) ?: throw Error("Data reference $originalName not resolved")
+                this.exitFromStack()
+                return listOf(InStatementDataDefinition(newVarName, inStatementDataDefinition.type, position))
+            } catch (e: NoSuchElementException) {
+                // If we can't find the original name anywhere, this might be a data area define
+                // that wasn't correctly parsed as such. Fall back to data area logic.
+                this.exitFromStack()
+                
+                // For data area defines, find the existing definition that the newVarName refers to
+                val existingDefinition = containingCU.dataDefinitions.find { it.name == newVarName }
+                    ?: containingCU.getInStatementDataDefinitions().find { it.name == newVarName }
+                if (existingDefinition != null) {
+                    val newType = if (existingDefinition.type is DataStructureType) {
+                        StringType.createInstance(existingDefinition.elementSize())
+                    } else existingDefinition.type
+                    return listOf(InStatementDataDefinition(newVarName, newType, position))
+                } else {
+                    // If we can't find the existing definition, assume it's a string
+                    return listOf(InStatementDataDefinition(newVarName, StringType(0, false), position))
                 }
-
-                else -> throw Error("Data reference $originalName not resolved")
             }
-
-            this.exitFromStack()
-            return listOf(InStatementDataDefinition(newVarName, inStatementDataDefinition.type, position))
         }
     }
 
@@ -3177,17 +3197,39 @@ data class InStmt(
     }
 
     private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, target: AssignableExpression): String {
-        // TODO: In a full implementation, we would need to:
-        // 1. Look up the target variable name from the target expression
-        // 2. Find the corresponding DEFINE statement that created this variable
-        // 3. Extract the original data area name from that DEFINE statement
-        // This requires additional context that isn't readily available here
-        // For now, we'll use the target name as the data area name
-        return when (target) {
+        // Get the target variable name
+        val targetName = when (target) {
             is DataRefExpr -> target.variable.name
             is QualifiedAccessExpr -> target.field.name
             else -> target.toString()
         }
+        
+        // Find the DEFINE statement that created this variable
+        val cu = this.ancestor(CompilationUnit::class.java)
+        if (cu != null) {
+            // Get all statements from main and subroutines
+            val allStatements = cu.main.stmts + cu.subroutines.flatMap { it.stmts }
+            
+            // First try to find a DEFINE statement that is marked as data area define
+            val defineStmt = allStatements.filterIsInstance<DefineStmt>().find { 
+                it.newVarName == targetName && it.isDataAreaDefine
+            }
+            if (defineStmt != null) {
+                return defineStmt.originalName
+            }
+            
+            // Fallback: try to find any DEFINE statement with this newVarName
+            // This handles cases where isDataAreaDefine might be incorrectly set to false
+            val anyDefineStmt = allStatements.filterIsInstance<DefineStmt>().find { 
+                it.newVarName == targetName
+            }
+            if (anyDefineStmt != null) {
+                return anyDefineStmt.originalName
+            }
+        }
+        
+        // Fallback: use the target name as the data area name
+        return targetName
     }
 }
 
@@ -3241,16 +3283,39 @@ data class OutStmt(
     }
 
     private fun findDataAreaNameFromDefine(interpreter: InterpreterCore, source: Expression): String {
-        // TODO: In a full implementation, we would need to:
-        // 1. Look up the source variable name from the source expression
-        // 2. Find the corresponding DEFINE statement that created this variable
-        // 3. Extract the original data area name from that DEFINE statement
-        // For now, we'll use the source name as the data area name
-        return when (source) {
+        // Get the source variable name
+        val sourceName = when (source) {
             is DataRefExpr -> source.variable.name
             is QualifiedAccessExpr -> source.field.name
             else -> source.toString()
         }
+        
+        // Find the DEFINE statement that created this variable
+        val cu = this.ancestor(CompilationUnit::class.java)
+        if (cu != null) {
+            // Get all statements from main and subroutines
+            val allStatements = cu.main.stmts + cu.subroutines.flatMap { it.stmts }
+            
+            // First try to find a DEFINE statement that is marked as data area define
+            val defineStmt = allStatements.filterIsInstance<DefineStmt>().find { 
+                it.newVarName == sourceName && it.isDataAreaDefine
+            }
+            if (defineStmt != null) {
+                return defineStmt.originalName
+            }
+            
+            // Fallback: try to find any DEFINE statement with this newVarName
+            // This handles cases where isDataAreaDefine might be incorrectly set to false
+            val anyDefineStmt = allStatements.filterIsInstance<DefineStmt>().find { 
+                it.newVarName == sourceName
+            }
+            if (anyDefineStmt != null) {
+                return anyDefineStmt.originalName
+            }
+        }
+        
+        // Fallback: use the source name as the data area name
+        return sourceName
     }
 }
 
