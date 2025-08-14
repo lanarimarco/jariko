@@ -2434,10 +2434,10 @@ internal fun CsINContext.toAst(conf: ToAstConfiguration = ToAstConfiguration()):
     val position = toPosition(conf.considerPosition)
     val cspecParts = this.cspec_fixed_standard_parts()
 
-    // Factor1: Check for *LOCK
-    val lock = cspecParts.factor()?.factorContent()?.any {
-        it.text?.trim()?.uppercase() == "*LOCK"
-    } ?: false
+    // Factor1: Check for *LOCK  
+    // NOTE: Using simple text search as workaround for parsing issue
+    val sourceText = this.text ?: ""
+    val lock = sourceText.contains("*LOCK")
 
     // Handle different IN syntax patterns:
     // 1. C *LOCK IN         TARGET    - Factor2 blank, Result is target
@@ -2489,9 +2489,9 @@ internal fun CsOUTContext.toAst(conf: ToAstConfiguration = ToAstConfiguration())
     val cspecParts = this.cspec_fixed_standard_parts()
 
     // Factor1: Check for *LOCK
-    val lock = cspecParts.factor()?.factorContent()?.any {
-        it.text?.trim()?.uppercase() == "*LOCK"
-    } ?: false
+    // NOTE: Using simple text search as workaround for parsing issue  
+    val sourceText = this.text ?: ""
+    val lock = sourceText.contains("*LOCK")
 
     // Handle different OUT syntax patterns:
     // 1. C *LOCK OUT        SOURCE    - Factor2 blank, Result is source
