@@ -115,6 +115,7 @@ object SerializationOption {
             prettyPrint = false
         }
 
+    @OptIn(ExperimentalSerializationApi::class)
     private fun binaryFormat() =
         Cbor {
             serializersModule = module
@@ -130,6 +131,7 @@ object SerializationOption {
         StringInterpreterSerialization(stringFormat())
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     val binarySerializer by lazy {
         BinaryInterpreterSerialization(binaryFormat())
     }

@@ -146,7 +146,9 @@ fun assertIsIntValue(
 fun inputStreamFor(exampleName: String): InputStream {
     val resourceStream =
         Dummy::class.java.getResourceAsStream("/$exampleName.rpgle") ?: throw RuntimeException("$exampleName not found")
-    return BOMInputStream(resourceStream)
+    return BOMInputStream.builder()
+        .setInputStream(resourceStream)
+        .get()
 }
 
 fun inputStreamForCode(code: String): InputStream = code.byteInputStream(StandardCharsets.UTF_8)

@@ -58,11 +58,12 @@ internal fun notImplementOperationException(message: String): IllegalStateExcept
     ParseTreeToAstError("An operation is not implemented: $message")
 
 internal fun getAstCreationErrors() =
-    MainExecutionContext
+    @Suppress("UNCHECKED_CAST")
+    (MainExecutionContext
         .getAttributes()
         .getOrPut(
             "com.smeup.rpgparser.parsing.parsetreetoast.getAstCreationErrors",
-        ) { mutableListOf<Throwable>() } as MutableList<Throwable>
+        ) { mutableListOf<Throwable>() } as MutableList<Throwable>)
 
 /**
  * This function is used to throw an error with a specific message and cause.

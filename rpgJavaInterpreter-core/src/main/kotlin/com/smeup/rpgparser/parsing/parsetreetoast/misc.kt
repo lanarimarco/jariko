@@ -104,13 +104,14 @@ private data class DataDefinitionCalculator(
 
 internal object KnownDataDefinition {
     fun getInstance(): KnownDataDefinitionInstance =
-        if (MainExecutionContext.getParsingProgramStack().empty()) {
+        @Suppress("UNCHECKED_CAST")
+        (if (MainExecutionContext.getParsingProgramStack().empty()) {
             MainExecutionContext.getAttributes()
         } else {
             MainExecutionContext.getParsingProgramStack().peek().attributes
         }.computeIfAbsent("com.smeup.rpgparser.parsing.parsetreetoast.KnownDataDefinition") {
             mutableMapOf<String, DataDefinition>()
-        } as MutableMap<String, DataDefinition>
+        } as MutableMap<String, DataDefinition>)
 }
 
 typealias KnownDataDefinitionInstance = MutableMap<String, DataDefinition>

@@ -23,6 +23,7 @@ import com.smeup.rpgparser.utils.asInt
 import com.strumenta.kolasu.mapping.toPosition
 import com.strumenta.kolasu.model.Position
 import java.math.BigDecimal
+import java.util.Calendar
 import java.util.Date
 import kotlin.collections.HashMap
 import kotlin.math.max
@@ -509,7 +510,11 @@ internal fun RpgParser.DspecContext.toAst(
                         error(message = "Initialization value is incorrect. Must be 'YYYY-MM-DD'", conf = conf)
                     }
                     val dateInzSplit = (initializationValue as StringLiteral).value.split("-").map { it.toInt() }
-                    val dateInz = Date(dateInzSplit[0] - 1900, dateInzSplit[1] - 1, dateInzSplit[2])
+                    val calendar = Calendar.getInstance().apply {
+                        set(dateInzSplit[0], dateInzSplit[1] - 1, dateInzSplit[2], 0, 0, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                    val dateInz = calendar.time
                     initializationValue =
                         IntLiteral(
                             value = dateInz.time,
@@ -523,18 +528,32 @@ internal fun RpgParser.DspecContext.toAst(
                      * For more information, or if you want to add another format, see: https://www.ibm.com/docs/en/i/7.5?topic=formats-date-data-type
                      */
                     when (type.format) {
-                        DateFormat.JUL ->
-                            if (
-                                !dateInz.after(Date(1939 - 1900, 11, 31)) || !dateInz.before(Date(2040 - 1900, 0, 1))
-                            ) {
+                        DateFormat.JUL -> {
+                            val minDate = Calendar.getInstance().apply {
+                                set(1940, 0, 1, 0, 0, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.time
+                            val maxDate = Calendar.getInstance().apply {
+                                set(2040, 0, 1, 0, 0, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.time
+                            if (!dateInz.after(minDate.apply { time -= 1 }) || !dateInz.before(maxDate)) {
                                 error(message = "For JUL format the date must be between 1940 and 2039", conf = conf)
                             }
-                        DateFormat.ISO ->
-                            if (
-                                !dateInz.after(Date(-1900, 11, 31)) || !dateInz.before(Date(9999 - 1900, 0, 1))
-                            ) {
+                        }
+                        DateFormat.ISO -> {
+                            val minDate = Calendar.getInstance().apply {
+                                set(1, 0, 1, 0, 0, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.time
+                            val maxDate = Calendar.getInstance().apply {
+                                set(10000, 0, 1, 0, 0, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.time
+                            if (!dateInz.after(minDate.apply { time -= 1 }) || !dateInz.before(maxDate)) {
                                 error(message = "For ISO format the date must be between 0001 and 9999", conf = conf)
                             }
+                        }
                     }
                 }
 

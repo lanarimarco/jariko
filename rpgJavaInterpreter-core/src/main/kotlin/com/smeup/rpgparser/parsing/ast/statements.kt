@@ -2017,9 +2017,10 @@ data class DefineStmt(
         DefineStmt,
     > =
         (
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            @Suppress("UNCHECKED_CAST")
+            (MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
                 mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
+            } as MutableSet<DefineStmt>)
         ).toList()
 
     /**
@@ -2028,9 +2029,10 @@ data class DefineStmt(
      */
     private fun enterInStack(): Boolean {
         val stack =
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            @Suppress("UNCHECKED_CAST")
+            (MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
                 mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
+            } as MutableSet<DefineStmt>)
         return stack.add(this)
     }
 
@@ -2039,9 +2041,10 @@ data class DefineStmt(
      */
     private fun exitFromStack(): Boolean {
         val stack =
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            @Suppress("UNCHECKED_CAST")
+            (MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
                 mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
+            } as MutableSet<DefineStmt>)
         return stack.remove(this)
     }
 }

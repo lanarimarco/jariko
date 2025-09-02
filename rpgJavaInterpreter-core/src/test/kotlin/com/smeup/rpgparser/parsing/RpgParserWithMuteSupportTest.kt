@@ -23,7 +23,9 @@ open class RpgParserWithMuteSupportTest : AbstractTest() {
     fun muteAnnotationsAttributionLex() {
         // val preprocessed = preprocess(comparisonAnnotation)
         val errors = LinkedList<Error>()
-        val lexer = MuteLexer(CharStreams.fromStream(BOMInputStream(comparisonAnnotation.byteInputStream(Charsets.UTF_8))))
+        val lexer = MuteLexer(CharStreams.fromStream(BOMInputStream.builder()
+            .setInputStream(comparisonAnnotation.byteInputStream(Charsets.UTF_8))
+            .get()))
         lexer.removeErrorListeners()
         lexer.addErrorListener(
             object : BaseErrorListener() {
@@ -64,7 +66,9 @@ open class RpgParserWithMuteSupportTest : AbstractTest() {
         val errors = LinkedList<Error>()
         val muteParser =
             RpgParserFacade().createMuteParser(
-                BOMInputStream(comparisonAnnotationPreProcessed.byteInputStream(Charsets.UTF_8)),
+                BOMInputStream.builder()
+                    .setInputStream(comparisonAnnotationPreProcessed.byteInputStream(Charsets.UTF_8))
+                    .get(),
                 errors,
                 longLines = true,
             )

@@ -26,6 +26,7 @@ import com.smeup.rpgparser.parsing.parsetreetoast.LogicalCondition
 import com.smeup.rpgparser.serialization.BigDecimalSerializer
 import com.smeup.rpgparser.serialization.LocalDateTimeSerializer
 import com.smeup.rpgparser.serialization.StringBuilderSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
@@ -253,6 +254,7 @@ val json =
         allowStructuredMapKeys = true
     }
 
+@OptIn(ExperimentalSerializationApi::class)
 val cbor =
     Cbor {
         serializersModule = modules
@@ -262,8 +264,10 @@ fun CompilationUnit.encodeToString() = json.encodeToString(this)
 
 fun String.createCompilationUnit() = json.decodeFromString<CompilationUnit>(this)
 
+@OptIn(ExperimentalSerializationApi::class)
 fun CompilationUnit.encodeToByteArray() = cbor.encodeToByteArray(this)
 
+@OptIn(ExperimentalSerializationApi::class)
 fun ByteArray.createCompilationUnit() = cbor.decodeFromByteArray<CompilationUnit>(this)
 
 enum class SourceProgram(
