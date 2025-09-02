@@ -219,7 +219,7 @@ task runExample (type: JavaExec) {
     if (project.hasProperty('programArgs')){
         args(project.getProperties().get("programArgs").split(','))
     }
-    main="com.smeup.rpgparser.execution.RunnerKt"
+    mainClass="com.smeup.rpgparser.execution.RunnerKt"
     classpath = sourceSets.test.runtimeClasspath
 }
 
@@ -256,7 +256,7 @@ task runMutes(type: JavaExec) {
         println 'Mute directory is ' + muteDir
     }
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.smeup.rpgparser.mute.MuterunnerKt'
+    mainClass = 'com.smeup.rpgparser.mute.MuterunnerKt'
     args muteDir, "-v", "-lc", "../mutes_for_ci/mute_logging.config"
 }
 
@@ -271,7 +271,7 @@ Optional params
 - log_conf_file Debug option. 
   Logging configuration file, view: https://github.com/smeup/jariko/blob/master/docs/logging.md"""
     classpath = sourceSets.main.runtimeClasspath
-    main = "com.smeup.rpgparser.execution.RunnerKt"
+    mainClass = "com.smeup.rpgparser.execution.RunnerKt"
     description = """profileRpgProgram allows to understand how Jariko interprets any RPG Program.
 It creates a jfr file (java flight recorder) containing profiling informations. 
 After task execution, you can analize jfr file with JMC utility (Oracle Java Mission Control).
@@ -334,7 +334,7 @@ $usage
     ignoreExitValue = true
     doFirst {
         if (project.hasProperty("mainClass")) {
-            main = project.mainClass
+            mainClass = project.mainClass
             String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
             File rpgProgramFile = new File(project.mainClass.substring(project.mainClass.lastIndexOf(".") + 1))
             File jfrPath =  new File(buildDir.path, "jfr/$timestamp-${rpgProgramFile.name}.jfr")
@@ -359,14 +359,14 @@ for further informations."""
 }
 
 task compileAllMutes(type: JavaExec) {
-    main="com.smeup.rpgparser.TestingUtils"
+    mainClass="com.smeup.rpgparser.TestingUtils"
     classpath = sourceSets.test.runtimeClasspath
 }
 
 task compilePerformanceMutes(type: JavaExec) {
     systemProperty unlimitedStringTypeFlag, System.getProperty(unlimitedStringTypeFlag)
     enabled = System.getProperty('jariko.compilePerformanceMutes', 'true') == 'true'
-    main="com.smeup.rpgparser.TestingUtils"
+    mainClass="com.smeup.rpgparser.TestingUtils"
     classpath = sourceSets.test.runtimeClasspath
     args "-dirs", "performance,performance-ast"
 }

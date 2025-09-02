@@ -28,7 +28,7 @@ buildscript {
             name 'JFrog OSS snapshot repo'
             url  'https://oss.jfrog.org/oss-snapshot-local/'
         }
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
