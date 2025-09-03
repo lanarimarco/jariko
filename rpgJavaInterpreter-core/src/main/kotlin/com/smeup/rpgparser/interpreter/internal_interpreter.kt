@@ -1294,7 +1294,7 @@ open class InternalInterpreter(
     /**
      * Execute a statement keeping track of its state for observability purposes
      */
-    private inline fun execute(statement: Statement) {
+    private fun execute(statement: Statement) {
         val programName = this.getInterpretationContext().currentProgramName
         val callback = configuration.jarikoCallback
         val trace = toTracePoint(statement)
