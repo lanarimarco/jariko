@@ -156,4 +156,7 @@ internal fun popRuntimeErrorIfMatches(throwable: Throwable): ErrorEvent? {
 private fun getErrorEventStack(): Stack<ErrorEvent> =
     MainExecutionContext.getAttributes().computeIfAbsent("errorEventStack") {
         Stack<ErrorEvent>()
-    } as Stack<ErrorEvent>
+    }.let {
+        @Suppress("UNCHECKED_CAST")
+        it as Stack<ErrorEvent>
+    }

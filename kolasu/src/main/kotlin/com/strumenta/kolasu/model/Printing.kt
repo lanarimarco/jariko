@@ -22,6 +22,7 @@ fun Node.multilineString(indent: String = ""): String {
                 val paramType = mt.actualTypeArguments[0]
                 if (paramType is Class<*> && Node::class.java.isAssignableFrom(paramType)) {
                     sb.append("$indent$indentBlock${it.name} = [\n")
+                    @Suppress("UNCHECKED_CAST")
                     (it.get(this) as List<Node>).forEach {
                         sb.append(it.multilineString(indent + indentBlock + indentBlock))
                     }
