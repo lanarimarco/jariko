@@ -21,25 +21,25 @@ class ModelTest {
 
     @test fun tryToResolvePositiveCaseSameCase() {
         val ref = ReferenceByName<MyNode>("foo")
-        assertEquals(true, ref.tryToResolve(listOf(MyNode("foo"))))
+        assertEquals(true, ref.tryToResolve(mapOf("foo" to MyNode("foo"))))
         assertEquals(true, ref.resolved)
     }
 
     @test fun tryToResolveNegativeCaseSameCase() {
         val ref = ReferenceByName<MyNode>("foo")
-        assertEquals(false, ref.tryToResolve(listOf(MyNode("foo2"))))
+        assertEquals(false, ref.tryToResolve(mapOf("foo2" to MyNode("foo2"))))
         assertEquals(false, ref.resolved)
     }
 
     @test fun tryToResolvePositiveCaseDifferentCase() {
         val ref = ReferenceByName<MyNode>("foo")
-        assertEquals(true, ref.tryToResolve(listOf(MyNode("fOo")), caseInsensitive = true))
+        assertEquals(true, ref.tryToResolve(mapOf("FOO" to MyNode("fOo")), caseInsensitive = true))
         assertEquals(true, ref.resolved)
     }
 
     @test fun tryToResolveNegativeCaseDifferentCase() {
         val ref = ReferenceByName<MyNode>("foo")
-        assertEquals(false, ref.tryToResolve(listOf(MyNode("foO"))))
+        assertEquals(false, ref.tryToResolve(mapOf("foO" to MyNode("foO"))))
         assertEquals(false, ref.resolved)
     }
 }
