@@ -7,6 +7,7 @@ import com.strumenta.kolasu.model.Point
 import com.strumenta.kolasu.validation.Error
 import com.strumenta.kolasu.validation.ErrorType
 import org.antlr.v4.runtime.*
+import org.apache.commons.io.ByteOrderMark
 import org.apache.commons.io.input.BOMInputStream
 import org.junit.Test
 import java.util.*
@@ -23,7 +24,7 @@ open class RpgParserWithMuteSupportTest : AbstractTest() {
     fun muteAnnotationsAttributionLex() {
         // val preprocessed = preprocess(comparisonAnnotation)
         val errors = LinkedList<Error>()
-        val lexer = MuteLexer(CharStreams.fromStream(BOMInputStream(comparisonAnnotation.byteInputStream(Charsets.UTF_8))))
+        val lexer = MuteLexer(CharStreams.fromStream(BOMInputStream.builder().setInputStream(comparisonAnnotation.byteInputStream(Charsets.UTF_8)).setInclude(false).setByteOrderMarks(ByteOrderMark.UTF_8, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_32BE, ByteOrderMark.UTF_32LE).get()))
         lexer.removeErrorListeners()
         lexer.addErrorListener(
             object : BaseErrorListener() {
@@ -64,7 +65,7 @@ open class RpgParserWithMuteSupportTest : AbstractTest() {
         val errors = LinkedList<Error>()
         val muteParser =
             RpgParserFacade().createMuteParser(
-                BOMInputStream(comparisonAnnotationPreProcessed.byteInputStream(Charsets.UTF_8)),
+                BOMInputStream.builder().setInputStream(comparisonAnnotationPreProcessed.byteInputStream(Charsets.UTF_8)).setInclude(false).setByteOrderMarks(ByteOrderMark.UTF_8, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_32BE, ByteOrderMark.UTF_32LE).get(),
                 errors,
                 longLines = true,
             )
