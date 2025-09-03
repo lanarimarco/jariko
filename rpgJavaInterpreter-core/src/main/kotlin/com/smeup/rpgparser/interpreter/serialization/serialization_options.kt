@@ -30,6 +30,8 @@ import kotlinx.serialization.modules.contextual
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
+@OptIn(ExperimentalSerializationApi::class)
+
 private val module =
     SerializersModule {
         contextual(BigDecimalSerializer)
@@ -115,6 +117,7 @@ object SerializationOption {
             prettyPrint = false
         }
 
+    @OptIn(ExperimentalSerializationApi::class)
     private fun binaryFormat() =
         Cbor {
             serializersModule = module
@@ -130,6 +133,7 @@ object SerializationOption {
         StringInterpreterSerialization(stringFormat())
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     val binarySerializer by lazy {
         BinaryInterpreterSerialization(binaryFormat())
     }

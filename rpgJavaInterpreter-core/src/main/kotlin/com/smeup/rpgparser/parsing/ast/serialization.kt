@@ -30,6 +30,7 @@ import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -37,6 +38,8 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import java.math.BigDecimal
 import java.time.LocalDateTime
+
+@OptIn(ExperimentalSerializationApi::class)
 
 private val modules =
     SerializersModule {
@@ -253,6 +256,7 @@ val json =
         allowStructuredMapKeys = true
     }
 
+@OptIn(ExperimentalSerializationApi::class)
 val cbor =
     Cbor {
         serializersModule = modules
@@ -262,8 +266,10 @@ fun CompilationUnit.encodeToString() = json.encodeToString(this)
 
 fun String.createCompilationUnit() = json.decodeFromString<CompilationUnit>(this)
 
+@OptIn(ExperimentalSerializationApi::class)
 fun CompilationUnit.encodeToByteArray() = cbor.encodeToByteArray(this)
 
+@OptIn(ExperimentalSerializationApi::class)
 fun ByteArray.createCompilationUnit() = cbor.decodeFromByteArray<CompilationUnit>(this)
 
 enum class SourceProgram(
