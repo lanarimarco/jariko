@@ -2692,7 +2692,7 @@ target:
     | bif_subst #substTarget
     | bif_subarr #subarrTarget
     | bif_len #lenTarget
-    | container=idOrKeyword DOT fieldName=idOrKeyword #qualifiedTarget
+    | container=idOrKeyword FREE_DOT fieldName=idOrKeyword #qualifiedTarget
     | indic=SPLAT_INDICATOR #indicatorTarget
     | base=SPLAT_IN OPEN_PAREN index=expression CLOSE_PAREN #indexedIndicatorTarget
     | SPLAT_IN #globalIndicatorTarget

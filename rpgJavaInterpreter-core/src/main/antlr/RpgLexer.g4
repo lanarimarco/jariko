@@ -106,7 +106,7 @@ DIR_StringLiteralStart: ['] -> pushMode(InStringMode),type(StringLiteralStart) ;
 DIR_EOL : [ ]* NEWLINE {setText(getText().trim());} -> type(EOL),popMode;
 
 mode SKIP_REMAINING_WS;
-DIR_FREE_OTHER_TEXT: ~[\r\n]* -> popMode,skip;
+DIR_FREE_OTHER_TEXT: ~[\r\n]+ -> popMode,skip;
 
 mode EndOfSourceMode;
 EOS_EOL : NEWLINE -> type(EOL);
@@ -803,7 +803,7 @@ COMMENTS_EOL : NEWLINE -> popMode,skip;
 
 mode FIXED_CommentMode_HIDDEN;
 COMMENTS_TEXT_SKIP : [ ]+ -> skip;
-COMMENTS_TEXT_HIDDEN :  ~[\r\n]* -> channel(HIDDEN);
+COMMENTS_TEXT_HIDDEN :  ~[\r\n]+ -> channel(HIDDEN);
 COMMENTS_EOL_HIDDEN : NEWLINE ->  channel(HIDDEN),popMode;
 
 mode SQL_MODE;
