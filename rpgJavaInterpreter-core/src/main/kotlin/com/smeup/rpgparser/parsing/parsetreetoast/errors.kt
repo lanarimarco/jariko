@@ -57,6 +57,7 @@ internal fun Throwable.fireErrorEvent(position: Position?): Throwable {
 internal fun notImplementOperationException(message: String): IllegalStateException =
     ParseTreeToAstError("An operation is not implemented: $message")
 
+@Suppress("UNCHECKED_CAST")
 internal fun getAstCreationErrors() =
     MainExecutionContext
         .getAttributes()

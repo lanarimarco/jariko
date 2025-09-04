@@ -103,6 +103,7 @@ private data class DataDefinitionCalculator(
 }
 
 internal object KnownDataDefinition {
+    @Suppress("UNCHECKED_CAST")
     fun getInstance(): KnownDataDefinitionInstance =
         if (MainExecutionContext.getParsingProgramStack().empty()) {
             MainExecutionContext.getAttributes()
