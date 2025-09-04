@@ -4,6 +4,7 @@ import com.smeup.rpgparser.rpginterop.DirRpgProgramFinder
 import com.smeup.rpgparser.rpginterop.RpgProgramFinder
 import org.junit.Test
 import java.io.File
+import kotlin.io.path.createTempDirectory
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -19,7 +20,7 @@ class MuteRunnerTest {
      C     'Hello'       dsply
      C                   SETON                                          LR            
 """
-        val tempDir = createTempDir()
+        val tempDir = createTempDirectory().toFile()
         val aPgm = File(tempDir, "A.rpgle")
         aPgm.writeText(aSource)
         File(tempDir, "B.rpgle").writeText(bSource)
@@ -35,7 +36,7 @@ class MuteRunnerTest {
     MU* VAL1('Hello world!') VAL2(x) COMP(EQ) 
      C                   seton                                        lr         
 """
-        val tempDir = createTempDir()
+        val tempDir = createTempDirectory().toFile()
         val aPgm = File(tempDir, "A.rpgle")
         aPgm.writeText(aSource)
         val result = executeWithMutes(aPgm.toPath(), true, null)
@@ -51,7 +52,7 @@ class MuteRunnerTest {
     MU* VAL1(1) VAL2(2) COMP(EQ) 
      C                   seton                                        lr     
 """
-        val tempDir = createTempDir()
+        val tempDir = createTempDirectory().toFile()
         val aPgm = File(tempDir, "A.rpgle")
         aPgm.writeText(aSource)
         val result = executeWithMutes(aPgm.toPath(), true, null)

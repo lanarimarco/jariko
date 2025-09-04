@@ -222,7 +222,14 @@ fun configureLogChannel(
 
             val loggerConfig =
                 LoggerConfig
-                    .createLogger(false, Level.getLevel(level.uppercase()), channelName, "true", refs, null, ctx.configuration, null)
+                    .newBuilder()
+                    .withAdditivity(false)
+                    .withLevel(Level.getLevel(level.uppercase()))
+                    .withLoggerName(channelName)
+                    .withIncludeLocation("true")
+                    .withRefs(refs)
+                    .withConfig(ctx.configuration)
+                    .build()
 
             loggerConfig.addAppender(console, null, null)
             ctx.configuration.addLogger(channelName, loggerConfig)
@@ -235,7 +242,14 @@ fun configureLogChannel(
 
             val loggerConfig =
                 LoggerConfig
-                    .createLogger(false, Level.getLevel(level.uppercase()), channelName, "true", refs, null, ctx.configuration, null)
+                    .newBuilder()
+                    .withAdditivity(false)
+                    .withLevel(Level.getLevel(level.uppercase()))
+                    .withLoggerName(channelName)
+                    .withIncludeLocation("true")
+                    .withRefs(refs)
+                    .withConfig(ctx.configuration)
+                    .build()
 
             loggerConfig.addAppender(file, null, null)
             ctx.configuration.addLogger(channelName, loggerConfig)
