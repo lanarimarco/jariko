@@ -153,7 +153,8 @@ internal fun popRuntimeErrorIfMatches(throwable: Throwable): ErrorEvent? {
     return event.takeIf { it.error == throwable }.apply { eventStack.pop() }
 }
 
-private fun getErrorEventStack(): Stack<ErrorEvent> =
-    MainExecutionContext.getAttributes().computeIfAbsent("errorEventStack") {
+private fun getErrorEventStack(): Stack<ErrorEvent> {
+    return MainExecutionContext.getAttributes().computeIfAbsent("errorEventStack") {
         Stack<ErrorEvent>()
-    } as Stack<ErrorEvent>
+    }.let { it as? Stack<ErrorEvent> ?: Stack<ErrorEvent>() }
+}

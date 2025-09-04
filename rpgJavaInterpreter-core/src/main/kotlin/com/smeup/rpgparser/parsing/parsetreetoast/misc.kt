@@ -110,7 +110,7 @@ internal object KnownDataDefinition {
             MainExecutionContext.getParsingProgramStack().peek().attributes
         }.computeIfAbsent("com.smeup.rpgparser.parsing.parsetreetoast.KnownDataDefinition") {
             mutableMapOf<String, DataDefinition>()
-        } as MutableMap<String, DataDefinition>
+        }.let { it as? MutableMap<String, DataDefinition> ?: mutableMapOf<String, DataDefinition>() }
 }
 
 typealias KnownDataDefinitionInstance = MutableMap<String, DataDefinition>

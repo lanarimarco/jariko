@@ -2015,21 +2015,18 @@ data class DefineStmt(
     fun getStack(): List<
         DefineStmt,
     > =
-        (
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
-                mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
-        ).toList()
+        MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            mutableSetOf<DefineStmt>()
+        }.let { it as? MutableSet<DefineStmt> ?: mutableSetOf<DefineStmt>() }.toList()
 
     /**
      * Receiver wants to enter in call stack
      * @return false if the receiver cannot enter
      */
     private fun enterInStack(): Boolean {
-        val stack =
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
-                mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
+        val stack = MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            mutableSetOf<DefineStmt>()
+        }.let { it as? MutableSet<DefineStmt> ?: mutableSetOf<DefineStmt>() }
         return stack.add(this)
     }
 
@@ -2037,10 +2034,9 @@ data class DefineStmt(
      * Receiver will exit from call stack
      */
     private fun exitFromStack(): Boolean {
-        val stack =
-            MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
-                mutableSetOf<DefineStmt>()
-            } as MutableSet<DefineStmt>
+        val stack = MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
+            mutableSetOf<DefineStmt>()
+        }.let { it as? MutableSet<DefineStmt> ?: mutableSetOf<DefineStmt>() }
         return stack.remove(this)
     }
 }
