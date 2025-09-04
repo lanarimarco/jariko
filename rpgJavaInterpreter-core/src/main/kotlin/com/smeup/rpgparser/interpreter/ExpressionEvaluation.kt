@@ -1314,6 +1314,7 @@ class ExpressionEvaluation(
         right: ArrayValue,
         position: Position?,
     ): ArrayValue {
+        @Suppress("UNCHECKED_CAST")
         val listValue =
             when {
                 left.elementType is StringType && right.elementType is StringType ->

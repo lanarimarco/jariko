@@ -153,6 +153,7 @@ internal fun popRuntimeErrorIfMatches(throwable: Throwable): ErrorEvent? {
     return event.takeIf { it.error == throwable }.apply { eventStack.pop() }
 }
 
+@Suppress("UNCHECKED_CAST")
 private fun getErrorEventStack(): Stack<ErrorEvent> =
     MainExecutionContext.getAttributes().computeIfAbsent("errorEventStack") {
         Stack<ErrorEvent>()

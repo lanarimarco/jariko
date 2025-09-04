@@ -2012,6 +2012,7 @@ data class DefineStmt(
      * Get the list of stack. This could be necessary, in example, to avoid recursive calls.
      * @return List of `DefineStmt` or empty list.
      */
+    @Suppress("UNCHECKED_CAST")
     fun getStack(): List<
         DefineStmt,
     > =
@@ -2025,6 +2026,7 @@ data class DefineStmt(
      * Receiver wants to enter in call stack
      * @return false if the receiver cannot enter
      */
+    @Suppress("UNCHECKED_CAST")
     private fun enterInStack(): Boolean {
         val stack =
             MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
@@ -2036,6 +2038,7 @@ data class DefineStmt(
     /**
      * Receiver will exit from call stack
      */
+    @Suppress("UNCHECKED_CAST")
     private fun exitFromStack(): Boolean {
         val stack =
             MainExecutionContext.getAttributes().computeIfAbsent("DefineStmt.callStack") {
