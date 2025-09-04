@@ -423,7 +423,8 @@ open class JDExamplesTest : AbstractTest() {
                     .asString()
                     .value
                     .toCharArray()[i]
-                    .code.toByte(),
+                    .code
+                    .toByte(),
                 "I expected 0 at $i",
             )
         }
@@ -435,7 +436,8 @@ open class JDExamplesTest : AbstractTest() {
                     .asString()
                     .value
                     .toCharArray()[i]
-                    .code.toByte(),
+                    .code
+                    .toByte(),
                 "I expected 0 at $i",
             )
         }

@@ -24,7 +24,6 @@ import com.strumenta.kolasu.mapping.toPosition
 import com.strumenta.kolasu.model.Position
 import java.math.BigDecimal
 import java.util.Calendar
-import java.util.Date
 import kotlin.collections.HashMap
 import kotlin.math.max
 
@@ -1264,9 +1263,11 @@ class FieldsList(
                 ) { "I cannot calculate the size of ${it.name} from the overlaying fields as there are none" }
                 val overlayingFieldsWithoutEndOffset = overlayingFields.filter { it.endOffset == null }
                 check(overlayingFieldsWithoutEndOffset.isEmpty()) {
-                    "I cannot calculate the size of ${it.name} because it should be determined by the fields overlaying on it, but for some I do not know the end offset. They are: ${overlayingFieldsWithoutEndOffset.joinToString(
-                        separator = ", ",
-                    ) { it.name }}"
+                    "I cannot calculate the size of ${it.name} because it should be determined by " +
+                        "the fields overlaying on it, but for some I do not know the end offset. They are: " +
+                        overlayingFieldsWithoutEndOffset.joinToString(
+                            separator = ", ",
+                        ) { it.name }
                 }
                 val lastOffset = overlayingFields.map { it.endOffset!! }.maxOrNull()!!
                 it.calculatedElementSize = lastOffset

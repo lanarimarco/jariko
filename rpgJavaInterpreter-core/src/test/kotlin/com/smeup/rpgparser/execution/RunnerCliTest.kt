@@ -29,7 +29,13 @@ import com.smeup.rpgparser.execution.main as runnerMain
 class RunnerCliTest : AbstractTest() {
     @Test
     fun withNoArgsReplIsStarted() {
-        System.setIn(ReaderInputStream.builder().setReader(StringReader("signoff")).setCharset(Charset.defaultCharset()).get())
+        System.setIn(
+            ReaderInputStream
+                .builder()
+                .setReader(StringReader("signoff"))
+                .setCharset(Charset.defaultCharset())
+                .get(),
+        )
         val out = StringOutputStream()
         System.setOut(PrintStream(out))
 

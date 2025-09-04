@@ -34,7 +34,8 @@ fun MuteParser.MuteLineContext.toAst(
     fun extractExpressionFrom(token: Token): Expression =
         RpgParserFacade()
             .createParser(
-                BOMInputStream.builder()
+                BOMInputStream
+                    .builder()
                     .setInputStream(
                         (
                             "".padStart(8) +
@@ -42,9 +43,8 @@ fun MuteParser.MuteLineContext.toAst(
                                     1,
                                     token.text.lastIndex,
                                 )
-                        ).byteInputStream(Charsets.UTF_8)
-                    )
-                    .get(),
+                        ).byteInputStream(Charsets.UTF_8),
+                    ).get(),
                 errors = mutableListOf(),
                 longLines = true,
             ).expression()
